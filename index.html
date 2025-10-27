@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panggil Aku Mooooo!!!</title>
+    
+    <link href="style/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style/fontawesome/css/all.min.css" rel="stylesheet">
+	<link href="style/bangbinFonts.css" rel="stylesheet">
+    <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-color: #fef3c7; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .font-title {
+            font-family: 'Fredoka One', cursive;
+			font-weight: 900;
+        }
+        
+        .book-container {
+            width: 90vw;
+            max-width: 70%; 
+            aspect-ratio: 1200 / 700;
+            height: auto;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1500px;
+        }
+        .book {
+            width: 50%;
+            height: 100%;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform-style: preserve-3d;
+        }
+        
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform-origin: left;
+            transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform: rotateY(0deg);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            border-radius: 0 24px 24px 0;
+            cursor: pointer;
+            user-select: none;
+            will-change: transform;
+        }
+        .page.flipped {
+            transform: rotateY(-180deg);
+        }
+        
+        
+        .page-content {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            box-sizing: border-box;
+            padding: 2rem 4rem; 
+            background-color: #f8fafc; 
+            border-radius: 0 24px 24px 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            color: #1e293b; 
+        }
+        .page-content.back-side {
+            transform: rotateY(180deg);
+            border-radius: 24px 0 0 24px;
+        }
+        
+        .flex-center-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 1rem;
+        }
+        .cover {
+            
+            color: white;
+        }
+        
+        
+        .navigation-buttons {
+            position: relative;
+            display: flex;
+            gap: 15px; 
+            align-items: center; 
+            z-index: 1001; 
+        }
+        .nav-button {
+            background-color: #2563eb; 
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 70px; 
+            height: 70px;
+            font-size: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s ease-in-out;
+            box-shadow: 0 6px 0 #1e40af; 
+        }
+        .nav-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #1e40af;
+        }
+        .nav-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        
+        .daftar-isi-item {
+            display: flex;
+            
+            align-items: baseline;
+            width: 100%; 
+            font-size: 1.25rem;
+            cursor: pointer; 
+            transition: background-color 0.2s; 
+            border-radius: 8px; 
+            padding: 0.25rem 0.5rem; 
+            margin: 0 -0.5rem; 
+        }
+        .daftar-isi-item:hover {
+            background-color: #e2e8f0; 
+        }
+        
+        
+        .daftar-isi-item .dots {
+            flex-grow: 1;
+            border-bottom: 2px dotted #94a3b8;
+            margin: 0 0.5rem;
+            flex-shrink: 0; 
+            position: relative;
+            bottom: 4px;
+        }
+        .daftar-isi-item span:first-child {
+            flex-grow: 0;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .daftar-isi-item span:last-child {
+            flex-grow: 0;
+            flex-shrink: 0;
+            min-width: 2rem; 
+            text-align: right;
+        }
+        
+        .daftar-isi-icon {
+            width: 1.5rem; 
+            margin-right: 0.5rem;
+            text-align: center;
+            display: inline-block;
+            vertical-align: middle; 
+        }
+        
+        
+        .info-list {
+            display: grid;
+            grid-template-columns: auto 1fr; 
+            gap: 0.25rem 0.5rem; 
+            align-items: baseline; 
+        }
+        .info-list-label {
+            font-weight: 700; 
+            color: #212529; 
+            position: relative;
+            padding-right: 2rem; 
+            white-space: nowrap;
+        }
+        .info-list-label::after {
+            content: ":";
+            position: absolute;
+            right: 0.5rem;
+            top: 0;
+        }
+        .info-list-value {
+            
+        }
+
+        
+        @keyframes milk-fill {
+            from { height: 0; }
+            to { height: 100%; }
+        }
+        .milk-fill-anim {
+            animation: milk-fill 1s ease-out forwards;
+        }
+        
+        @keyframes horse-run {
+            0% { transform: translateX(-20px) rotate(-5deg); }
+            50% { transform: translateX(30px) rotate(5deg); }
+            100% { transform: translateX(-20px) rotate(-5deg); }
+        }
+        .horse-run-anim {
+            animation: horse-run 1s ease-in-out;
+        }
+
+        
+        @keyframes bee-fly {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-10px, -10px) rotate(-15deg); }
+            50% { transform: translate(10px, 0px) rotate(15deg); }
+            75% { transform: translate(-5px, 10px) rotate(-10deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        .bee-fly-anim {
+            animation: bee-fly 0.5s ease-in-out;
+        }
+
+        
+        .quiz-btn {
+            background-color: #3b82f6; 
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.25rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 0 #1d4ed8; 
+            transition: all 0.1s ease-in-out;
+            border: none; 
+        }
+        .quiz-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #1d4ed8;
+        }
+        .quiz-btn:hover {
+            background-color: #2563eb;
+            color: white; 
+        }
+
+        
+        .quiz-option {
+            width: 6rem; 
+            height: 6rem; 
+            background-color: white;
+            border-radius: 0.75rem; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            padding: 0.5rem;
+            border: none; 
+        }
+        .quiz-option:hover {
+            transform: scale(1.1);
+            background-color: #f0f9ff; 
+        }
+        .quiz-option.correct {
+            background-color: #dcfce7; 
+            color: #166534; 
+            
+            box-shadow: 0 0 0 4px #22c55e;
+        }
+        .quiz-option.wrong {
+            background-color: #fee2e2; 
+            color: #991b1b; 
+            
+            box-shadow: 0 0 0 4px #ef4444;
+        }
+        
+        .quiz-option img {
+            width: 4rem; 
+            height: 4rem; 
+            object-fit: contain;
+            pointer-events: none; 
+        }
+
+
+        
+        .puzzle-piece {
+            width: 5.5rem; 
+            height: 5.5rem; 
+            background-color: white;
+            border-radius: 0.75rem; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            padding: 0.5rem;
+            border: none; 
+        }
+        
+        .puzzle-piece img {
+            width: 4rem; 
+            height: 4rem; 
+            object-fit: contain;
+            pointer-events: none; 
+        }
+        .puzzle-piece.selected {
+            
+            box-shadow: 0 0 0 4px #3b82f6;
+            transform: scale(1.05);
+        }
+        .puzzle-piece.matched {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: scale(0.9);
+        }
+        .puzzle-shadow {
+            
+             background-color: #e5e7eb; 
+        }
+        
+        .puzzle-shadow img {
+            filter: grayscale(1) brightness(0) opacity(0.3);
+        }
+       
+        .memory-card {
+            width: 5rem; 
+            height: 5.5rem; 
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            cursor: pointer;
+        }
+        .memory-card .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.75rem; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); 
+            font-size: 2.5rem; 
+            padding: 0.5rem;
+        }
+        
+        .memory-card .card-front img {
+            width: 4rem; 
+            height: 4rem; 
+            object-fit: contain;
+        }
+        .memory-card .card-front {
+            background-color: white;
+            color: #374151; 
+            transform: rotateY(180deg);
+        }
+        .memory-card .card-back {
+            background-color: #60a5fa; 
+            color: white;
+            font-size: 3rem; 
+        }
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+		
+		.memory-card.matched {
+            cursor: not-allowed;
+        }
+        
+        
+        .memory-card.matched .card-back {
+            background-color: #22c55e; 
+            color: white;
+        }
+
+
+        
+        .egg-draggable {
+            cursor: grab;
+            transition: opacity 0.2s;
+        }
+        .egg-draggable.dragging {
+            opacity: 0.4;
+            cursor: grabbing;
+        }
+        .egg-draggable.placed {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        
+        #egg-basket.drag-over {
+            background-color: #fef08a; 
+            border-style: solid;
+        }
+        
+        #egg-nest, #egg-basket {
+             background-color: #a16207; 
+             border-color: #713f12; 
+        }
+        
+        
+        #puzzle-game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+        #puzzle-grid-target {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+            width: 12.25rem; 
+            height: 12.25rem;
+            padding: 2px;
+            background-color: #d1d5db; 
+            border-radius: 0.5rem;
+        }
+        .puzzle-drop-zone {
+            width: 6rem;
+            height: 6rem;
+            background-color: #e5e7eb;
+            border: 2px dashed #9ca3af;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+        }
+        .puzzle-drop-zone.drag-over {
+            background-color: #c7d2fe; 
+            border-style: solid;
+        }
+        
+        .puzzle-drop-zone .puzzle-piece-drag {
+            width: 100%;
+            height: 100%;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        
+        #puzzle-pieces-source {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 15rem; 
+            min-height: 8rem;
+        }
+        .puzzle-piece-drag {
+            width: 6rem; 
+            height: 6rem; 
+            background-color: white;
+            border-radius: 0.5rem; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); 
+            cursor: grab;
+            transition: all 0.2s;
+            
+            background-size: 200% 200%; 
+        }
+        .puzzle-piece-drag.dragging {
+            opacity: 0.4;
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+        .puzzle-piece-drag.placed {
+            cursor: not-allowed;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        
+        .penulis-bg {
+            position: relative;
+            z-index: 1; 
+        }
+        .penulis-bg::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('image/Ika2.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3; 
+            z-index: -1;
+            border-radius: 24px 0 0 24px; 
+        }
+
+        
+        .hover-scale {
+            transition: transform 0.2s;
+        }
+        .hover-scale:hover {
+            transform: scale(1.1);
+        }
+        @media (min-width: 768px) {
+            .img-md-larger {
+                width: 10rem !important;
+                height: 10rem !important;
+            }
+            .md-h-150 {
+                height: 150px !important;
+            }
+            .md-h-100 {
+                height: 100px !important;
+            }
+            .md-w-h-20 {
+                width: 5rem !important;
+                height: 5rem !important;
+            }
+        }
+        .space-y-1 > * + * { margin-top: 0.25rem; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .text-purple { color: #a855f7; }
+        .text-purple-emphasis { color: #581c87; }
+        .text-teal-emphasis { color: #115e59; }
+        .text-indigo-emphasis { color: #3730a3; }
+        .text-orange-emphasis { color: #9a3412; }
+        .text-orange-200 { color: #fed7aa; }
+        .hover-scale-150 {
+            transition: transform 0.2s;
+        }
+        .hover-scale-150:hover { transform: scale(1.5); }
+        .petunjuk-item {
+            transition: background-color 0.2s;
+        }
+        .petunjuk-item:hover {
+            background-color: #e2e8f0; 
+        }
+        .hover-text-primary:hover {
+            color: #0d6efd !important; 
+        }
+        
+        
+        .bg-teal-500 { background-color: #14b8a6 !important; }
+        .bg-teal-500:hover { background-color: #0d9488 !important; }
+        .shadow-teal-700 { box-shadow: 0 4px 0 #0f766e; }
+        .shadow-teal-700:active { box-shadow: 0 2px 0 #0f766e; }
+        
+        .bg-indigo-500 { background-color: #6366f1 !important; }
+        .bg-indigo-500:hover { background-color: #4f46e5 !important; }
+        .shadow-indigo-700 { box-shadow: 0 4px 0 #4338ca; }
+        .shadow-indigo-700:active { box-shadow: 0 2px 0 #4338ca; }
+        
+        .bg-orange-500 { background-color: #f97316 !important; }
+        .bg-orange-500:hover { background-color: #ea580c !important; }
+        .shadow-orange-700 { box-shadow: 0 4px 0 #c2410c; }
+        .shadow-orange-700:active { box-shadow: 0 2px 0 #c2410c; }
+        
+        .bg-gradient-bangbin1 {
+            background-image: linear-gradient(to bottom right, #ffffff, #69d86f);
+        }
+        .bg-gradient-bangbin2 {
+            background-image: linear-gradient(to top, #ffffff, #72abe0);
+        }
+        .bg-gradient-bangbin3 {
+            background-image: linear-gradient(to top, #ffffff, #e48ce7);
+        }		
+
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="book-container">
+            <div class="book" id="book">
+                
+                <!-- HALAMAN 1 (Sampul Depan & Info Penerbit) -->
+                <div class="page">
+                    <div class="page-content cover flex-center-col text-white" style="background-image: url('image/Sampul.png'); background-size: cover; background-position: center;">
+
+                    </div>
+                    <div class="page-content back-side d-flex justify-content-center align-items-center bg-white h-100">                    
+                        <a href="https://www.kemdikbud.go.id" target="_blank" class="d-block hover-scale" title="Kunjungi Website Kemdikbud">
+                            <img src="image/favicon.ico" alt="Logo Kemdikbud" class="object-fit-contain mb-5 img-md-larger" style="width: 10rem; height: 10rem;">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- HALAMAN 2 (PETUNJUK) -->
+                <div class="page">
+                    <!-- Depan Halaman 2 (Petunjuk) -->
+                    <div class="page-content d-flex flex-column bg-gradient-bangbin2">
+                        <h2 class="fs-3 mb-5 font-title text-center text-primary-emphasis">Panggil Aku Mooooo!!!</h2>
+                        <br><br>
+
+                        <div class="container-fluid fs-6 fs-md-5 text-secondary-emphasis p-0 info-list">
+                            <span class="info-list-label">Tema</span>
+                            <span class="info-list-value">Mahluk Ciptaan Tuhan</span>
+                            
+                            <span class="info-list-label">Subtema</span>
+                            <span class="info-list-value">Hewan</span>
+                            
+                            <span class="info-list-label">Materi</span>
+                            <span class="info-list-value">Hewan Ternak</span>
+                            
+                            <span class="info-list-label">PAUD</span>
+                            <span class="info-list-value">4-5 tahun</span>
+                        </div>
+						
+                        <div class="mt-4">
+                            <p class="info-list-label">Tujuan Pembelajaran:</p>
+                            <ul class="list-unstyled ps-4 fs-sm fs-md-6 text-secondary space-y-1 mt-1 mb-1" style="list-style-type: disc;">
+                                <li>Mengenal nama-nama hewan ternak.</li>
+                                <li>Memahami ciri hewan ternak.</li>
+                            </ul>
+                        </div>
+
+                        
+                        <div class="fs-sm fs-md-6 text-secondary mt-4 info-list">
+                            <span class="info-list-label">Penulis</span>
+                            <span class="info-list-value">Ika Nirmala, M.Pd</span>
+                            
+                            <span class="info-list-label">Hak Cipta</span>
+                            <span class="info-list-value">
+                                Direktorat Jendral PAUD<br>
+                                Kementrian Pendidikan Dasar dan Menengah
+                            </span>
+                            
+                            <span class="info-list-label">Terbitan</span>
+                            <span class="info-list-value">Pertama, 2025</span>
+                        </div>
+                    </div>
+
+                    <div class="page-content back-side d-flex flex-column bg-gradient-bangbin3">
+                        <h2 class="fs-2 mb-5 font-title text-center text-primary-emphasis">Petunjuk Penggunaan</h2>
+
+                        <div class="d-flex flex-column align-items-center w-100 gap-4">
+                            <div class="space-y-2 text-start">
+                                <div class="d-flex align-items: center gap-4 fs-5 petunjuk-item cursor-pointer rounded-3 p-2" data-sound="petunjuk1">
+                                    <i class="fa-solid fa-arrows-left-right text-center fs-3 text-primary" style="width: 2.5rem;"></i>
+                                    <span>Kamu bisa klik panah di bawah buku atau klik halaman untuk membalik lembar buku.</span>
+                                </div>
+                                <div class="d-flex align-items: center gap-4 fs-5 petunjuk-item cursor-pointer rounded-3 p-2" data-sound="petunjuk2">
+                                    <i class="fa-solid fa-hand-pointer text-center fs-3 text-purple" style="width: 2.5rem;"></i>
+                                    <span>Klik pada hewannya untuk mendengarkan keterangganya yaah!</span>
+                                </div>
+                                <div class="d-flex align-items: center gap-4 fs-5 petunjuk-item cursor-pointer rounded-3 p-2" data-sound="petunjuk3">
+                                    <i class="fa-solid fa-volume-high text-center fs-3 text-success" style="width: 2.5rem;"></i>
+                                    <span>Pada halaman Suara Hewan, Klik hewannya untuk mendengarkan suara.</span>
+                                </div>
+                                 <div class="d-flex align-items: center gap-4 fs-5 petunjuk-item cursor-pointer rounded-3 p-2" data-sound="petunjuk4">
+                                    <i class="fa-solid fa-question-circle text-center fs-3 text-danger" style="width: 2.5rem;"></i>
+                                    <span>Ayo! Selesaikan permainan mencocokkan suara, memasangakan gambar, mencari gambar yang sama, merangkai potongan gambar hewan di akhir buku!</span>
+                                </div>
+                            </div>
+
+                            <p class="text-center text-secondary fs-5 mt-4 fw-medium">
+                                Klik setiap petunjuk di atas untuk mendengarkan penjelasannya.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HALAMAN 3 (Daftar Isi & Sapi) -->
+                <div class="page">
+                    <div class="page-content d-flex flex-column bg-gradient-bangbin2">
+                        <h2 class="display-6 text-primary-emphasis mb-5 font-title text-center">Daftar Isi</h2>
+                        <div class="space-y-2 text-secondary-emphasis w-100"> 
+                            <div class="daftar-isi-item" data-target-page="3">
+                                <span><img src="image/Sapi.png" alt="Ikon Sapi" class="daftar-isi-icon"> Sapi</span>
+                                <span class="dots"></span>
+                                <span>3</span>
+                            </div>
+                            <div class="daftar-isi-item" data-target-page="3">
+                                <span><img src="image/Domba.png" alt="Ikon Domba" class="daftar-isi-icon"> Domba</span>
+                                <span class="dots"></span>
+                                <span>4</span>
+                            </div>
+                            <div class="daftar-isi-item" data-target-page="4">
+                                <span><img src="image/Ayam.png" alt="Ikon Ayam" class="daftar-isi-icon"> Ayam</span>
+                                <span class="dots"></span>
+                                <span>5</span>
+                            </div>
+                            <div class="daftar-isi-item" data-target-page="4">
+                                <span><img src="image/Kuda.png" alt="Ikon Kuda" class="daftar-isi-icon"> Kuda</span>
+                                <span class="dots"></span>
+                                <span>6</span>
+                            </div>
+                            <div class="daftar-isi-item" data-target-page="5">
+                                <span><img src="image/Lebah.png" alt="Ikon Lebah" class="daftar-isi-icon"> Lebah</span>
+                                <span class="dots"></span>
+                                <span>7</span>
+                            </div>
+                            <div class="daftar-isi-item" data-target-page="5">
+                                <span><img src="image/Bebek.png" alt="Ikon Bebek" class="daftar-isi-icon"> Bebek</span>
+                                <span class="dots"></span>
+                                <span>8</span>
+                            </div>
+                            <!-- Item Tambahan -->
+                            <div class="daftar-isi-item" data-target-page="6">
+                                <span><i class="fa-solid fa-volume-high daftar-isi-icon"></i> Galeri Suara</span>
+                                <span class="dots"></span>
+                                <span>9</span>
+                            </div>
+                            <div class="daftar-isi-item" data-target-page="6">
+                                <span><i class="fa-solid fa-puzzle-piece daftar-isi-icon"></i> Kuis Seru</span>
+                                <span class="dots"></span>
+                                <span>10</span>
+                            </div>
+                            <div class="daftar-isi-item" data-target-page="8">
+                                <span><i class="fa-solid fa-book daftar-isi-icon"></i> Daftar Pustaka</span>
+                                <span class="dots"></span>
+                                <span>14</span>
+                            </div>
+                            <div class="daftar-isi-item" data-target-page="9">
+                                <span><i class="fa-solid fa-user daftar-isi-icon"></i> Penulis</span>
+                                <span class="dots"></span>
+                                <span>15</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Belakang Halaman 3 (Sapi) -->
+                    <div class="page-content back-side flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+                        <h2 class="display-5 text-success-emphasis font-title">Halo, aku Sapi!</h2>
+                        <div class="d-flex flex-column align-items-center justify-content-center position-relative my-4">
+                            <div id="milk-interaction" class="position-absolute border border-4 border-secondary-subtle rounded-top-pill rounded-bottom d-none overflow-hidden" style="bottom: -2rem; right: -2.5rem; width: 5rem; height: 7rem; background-color: #e9ecef;">
+                                <div id="milk-fill" class="position-absolute bottom-0 start-0 w-100 bg-white"></div>
+                            </div>
+                            <img id="cow-btn" src="image/Sapi.png" alt="Sapi" class="w-auto cursor-pointer transition-transform hover-scale active-scale-95 shadow-lg md-h-150" style="height: 8rem;">
+                        </div>
+                        <p class="fs-4 text-success-dark text-center">
+                            Aku senang makan rumput. Kalau aku senang, aku bilang... <strong class="fs-3 font-title">MOOO!</strong>
+                            <span class="d-block fs-5 mt-2">(Klik aku untuk memberi susu!)</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- HALAMAN 4 (Domba & Ayam) -->
+                <div class="page">
+                    <!-- Depan Halaman 4 (Domba) -->
+                    <div class="page-content flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+                        <h2 class="display-5 text-info-emphasis font-title">Hai, aku Domba!</h2>
+                        <div class="d-flex flex-column align-items-center justify-content-center position-relative my-4">
+                            <i id="wool-interaction" class="fa-solid fa-shirt fs-1 text-purple position-absolute opacity-0 transition-all duration-500 d-none" style="top: -2rem; right: -1.25rem;"></i>
+                            <img id="sheep-btn" src="image/Domba.png" alt="Domba" class="w-auto cursor-pointer transition-transform hover-scale active-scale-95 shadow-lg md-h-150" style="height: 8rem;">
+                        </div>
+                        <p class="fs-4 text-info-dark text-center">
+                            Lihat buluku, tebal sekali! Suaraku... <strong class="fs-3 font-title">MBEEE!</strong>
+                            <span class="d-block fs-5 mt-2">(Klik aku untuk lihat wol!)</span>
+                        </p>
+                    </div>
+                    <!-- Belakang Halaman 4 (Ayam) -->
+                    <div class="page-content back-side flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+                        <h2 class="display-5 text-danger-emphasis font-title">Petok! Aku Ayam!</h2>
+                        
+                        <div class="d-flex flex-column align-items-center justify-content-center w-100 my-4">
+                            <div class="d-flex align-items-end justify-content-center gap-4 w-100">
+                                <div class="d-flex flex-column align-items: center">
+                                    <img src="image/Ayam.png" alt="Ayam" class="w-auto shadow-lg mb-2 cursor-pointer md-h-100" style="height: 6rem;" onclick="playInfoSound('ayam')">
+                                    
+                                    <div id="egg-nest" class="rounded-pill d-flex align-items-center justify-content-center gap-1 p-2 border border-4 border-dashed" style="width: 9rem; height: 6rem;">
+                                        <i id="egg1" class="fa-solid fa-egg fs-1 text-orange-200 egg-draggable" draggable="true"></i>
+                                        <i id="egg2" class="fa-solid fa-egg fs-1 text-orange-200 egg-draggable" draggable="true"></i>
+                                        <i id="egg3" class="fa-solid fa-egg fs-1 text-orange-200 egg-draggable" draggable="true"></i>
+                                    </div>
+                                    <span class="fs-5 text-danger-emphasis fw-medium mt-1">Sarang</span>
+                                </div>
+
+                                <!-- Keranjang (Target) -->
+                                <div class="d-flex flex-column align-items: center">
+                                    <i class="fa-solid fa-basket-shopping display-3 md-display-1 text-warning-emphasis shadow-lg mb-2"></i>
+                                    <div id="egg-basket" class="rounded-3 d-flex align-items: center justify-content-center gap-1 p-2 border border-4 border-dashed" style="width: 9rem; height: 6rem;">
+                                        <!-- Tempat telur diletakkan -->
+                                    </div>
+                                    <span class="fs-5 text-danger-emphasis fw-medium mt-1">Keranjang</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="fs-4 text-danger-dark text-center">
+                            Bantu aku memindahkan telur ke keranjang!
+                            <span class="d-block fs-5 mt-2">(Drag dan drop telur!)</span>
+                        </p>
+                        <p id="egg-feedback" class="fs-4 font-title text-success" style="height: 1.5rem;"></p>
+                    </div>
+                </div>
+
+                <!-- HALAMAN 5 (Kuda & Lebah) -->
+                <div class="page">
+                    <!-- Depan Halaman 5 (Kuda) -->
+                    <div class="page-content flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+                        <h2 class="display-5 text-warning-emphasis font-title">Whoosh! Aku Kuda!</h2>
+                        <div class="d-flex flex-column align-items-center justify-content-center position-relative my-4">
+                            <img id="horse-btn" src="image/Kuda.png" alt="Kuda" class="w-auto cursor-pointer shadow-lg md-h-150" style="height: 8rem;">
+                        </div>
+                        <p class="fs-4 text-warning-dark text-center">
+                            Aku pelari cepat! Dengarkan suaraku... <strong class="fs-3 font-title">HIIII-HA!</strong>
+                            <span class="d-block fs-5 mt-2">(Klik aku untuk berlari!)</span>
+                        </p>
+                    </div>
+                    <!-- Belakang Halaman 5 (Lebah) -->
+                    <div class="page-content back-side flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+                        <h2 class="display-5 text-orange-emphasis font-title">Bzz! Aku Lebah!</h2>
+                        <div class="d-flex flex-column align-items-center justify-content-center position-relative my-4">
+                            <img id="bee-btn" src="image/Lebah.png" alt="Lebah" class="w-auto cursor-pointer shadow-lg md-h-150" style="height: 8rem;">
+                        </div>
+                        <p class="fs-4 text-orange-dark text-center">
+                            Hal yang paling aku suka adalah membuat... madu! <strong class="fs-3 font-title">BZZZ!</strong>
+                            <span class="d-block fs-5 mt-2">(Klik aku untuk terbang!)</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- HALAMAN 6 (Bebek & Penutup) -->
+                <div class="page">
+                    <!-- Depan Halaman 6 (Bebek) -->
+                    <div class="page-content flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+                        <h2 class="display-5 text-info-emphasis font-title">Kwek! Aku Bebek!</h2>
+                        <div class="d-flex flex-column align-items-center justify-content-center position-relative my-4">
+                            <i id="water-splash" class="fa-solid fa-burst display-1 text-primary position-absolute opacity-0 d-none"></i>
+                            <img id="duck-btn" src="image/Bebek.png" alt="Bebek" class="w-auto cursor-pointer transition-transform hover-scale active-scale-95 shadow-lg md-h-150" style="height: 8rem;">
+                        </div>
+                        <p class="fs-4 text-info-dark text-center">
+                            Aku jago sekali berenang di kolam! <strong class="fs-3 font-title">KWEK! KWEK!</strong>
+                            <span class="d-block fs-5 mt-2">(Klik aku untuk main air!)</span>
+                        </p>
+                    </div>
+                    <!-- Belakang Halaman 6 (Penutup) -->
+					<div class="page-content back-side flex-center-col text-center" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+						<h2 class="fs-2 md:fs-1 text-dark mb-4 font-title">Klik Gambar Hewan untuk mendengar suaranya!</h2>
+						<div class="d-grid gap-4 gap-md-5" style="grid-template-columns: repeat(3, 1fr);">  
+							<img src="image/Sapi.png" alt="Sapi" class="object-fit-contain cursor-pointer hover-scale-150 md-w-h-20" style="width: 4rem; height: 4rem;" onclick="playSound('moo')">
+							<img src="image/Domba.png" alt="Domba" class="object-fit-contain cursor-pointer hover-scale-150 md-w-h-20" style="width: 4rem; height: 4rem;" onclick="playSound('baa')">
+							<img src="image/Ayam.png" alt="Ayam" class="object-fit-contain cursor-pointer hover-scale-150 md-w-h-20" style="width: 4rem; height: 4rem;" onclick="playSound('cluck')">
+							<img src="image/Kuda.png" alt="Kuda" class="object-fit-contain cursor-pointer hover-scale-150 md-w-h-20" style="width: 4rem; height: 4rem;" onclick="playSound('neigh')">
+							<img src="image/Lebah.png" alt="Lebah" class="object-fit-contain cursor-pointer hover-scale-150 md-w-h-20" style="width: 4rem; height: 4rem;" onclick="playSound('buzz')">
+							<img src="image/Bebek.png" alt="Bebek" class="object-fit-contain cursor-pointer hover-scale-150 md-w-h-20" style="width: 4rem; height: 4rem;" onclick="playSound('quack')">
+						</div>
+						<p class="text-primary fs-4 mt-5">Klik hewan untuk mendengar suaranya lagi!</p>
+					</div>
+                </div>
+
+                <!-- HALAMAN 7 (Kuis Suara & Kuis Pasangkan) -->
+                <div class="page">
+                    <!-- Depan Halaman 7 (Kuis Suara) -->
+                    <div class="page-content flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+                        <h2 class="fs-2 md:fs-1 text-purple-emphasis font-title">Kuis 1: Tebak Suara!</h2>
+
+                        <button id="tutor-game-1" class="d-flex align-items-center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer">
+                            <i class="fa-solid fa-volume-high fs-4 text-primary"></i>
+                            <span>Cara Main</span>
+                        </button>
+
+                        <button id="play-quiz-sound-btn" class="quiz-btn">
+                            <i class="fa-solid fa-volume-high"></i> Putar Suara
+                        </button>
+                        <div id="quiz-options-container" class="d-flex gap-3 gap-md-4 my-4">
+                            <!-- Opsi kuis akan diisi oleh JavaScript (menggunakan gambar) -->
+                        </div>
+                        <p id="quiz-feedback" class="fs-3 font-title" style="height: 2rem;"></p>
+                        <button id="next-quiz-btn" class="quiz-btn d-none">
+                            Soal Berikutnya
+                        </button>
+                    </div>
+                    
+                    <!-- Belakang Halaman 7 (Kuis Puzzle Pasangkan) -->
+                    <div class="page-content back-side flex-center-col gap-3" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+                        <h2 class="fs-2 md:fs-1 text-teal-emphasis font-title">Kuis 2: Pasangkan!</h2>
+
+                        <button id="tutor-game-2" class="d-flex align-items-center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer mb-2">
+                            <i class="fa-solid fa-volume-high fs-4 text-primary"></i>
+                            <span>Cara Main</span>
+                        </button>
+                        
+                        <p id="puzzle-feedback" class="fs-3 font-title" style="height: 2rem;"></p>
+                        <div class="d-flex gap-4 gap-md-5 w-100 justify-content-center align-items-center">
+                            <div id="puzzle-animals-container" class="d-flex flex-column gap-3">
+                                <button class="puzzle-piece animal" data-match="cow"><img src="image/Sapi.png" alt="Sapi"></button>
+                                <button class="puzzle-piece animal" data-match="chicken"><img src="image/Ayam.png" alt="Ayam"></button>
+                                <button class="puzzle-piece animal" data-match="horse"><img src="image/Kuda.png" alt="Kuda"></button>
+                            </div>
+                            <div id="puzzle-shadows-container" class="d-flex flex-column gap-3">
+                                <button class="puzzle-piece puzzle-shadow" data-match="horse"><img src="image/Kuda.png" alt="Bayangan Kuda"></button>
+                                <button class="puzzle-piece puzzle-shadow" data-match="cow"><img src="image/Sapi.png" alt="Bayangan Sapi"></button>
+                                <button class="puzzle-piece puzzle-shadow" data-match="chicken"><img src="image/Ayam.png" alt="Bayangan Ayam"></button>
+                            </div>
+                        </div>
+                        <button id="reset-puzzle-btn" class="quiz-btn bg-teal-500 shadow-teal-700 d-none mt-4">
+                            Ulangi Puzzle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- HALAMAN 8 (Kuis Memori & Pustaka) -->
+                <div class="page">
+                    <!-- Depan Halaman 8 (Kuis Memori) -->
+                    <div class="page-content flex-center-col gap-3" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+                        <h2 class="fs-2 md:fs-1 text-indigo-emphasis font-title">Kuis 3: Ingat Aku!</h2>
+
+                        <button id="tutor-game-3" class="d-flex align-items-center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer mb-2">
+                            <i class="fa-solid fa-volume-high fs-4 text-primary"></i>
+                            <span>Cara Main</span>
+                        </button>
+
+                        <p id="memory-feedback" class="fs-3 font-title" style="height: 2rem;"></p>
+                        
+                        <div id="memory-grid" class="d-grid gap-3" style="grid-template-columns: repeat(4, 1fr);">
+                        </div>
+
+                        <button id="reset-memory-btn" class="quiz-btn bg-indigo-500 shadow-indigo-700 d-none mt-4">
+                            Ulangi Kuis
+                        </button>
+                    </div>
+                    <!-- Belakang Halaman 8 (Kuis 4) -->
+                    <div class="page-content back-side flex-center-col" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+
+                        <h2 class="fs-2 md:fs-1 text-orange-emphasis font-title">Kuis 4: Susun Puzzle!</h2>
+                        
+                        <!-- BARU: Tombol Cara Main Kuis 4 -->
+                        <button id="tutor-game-4" class="d-flex align-items-center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer mb-2">
+                            <i class="fa-solid fa-volume-high fs-4 text-primary"></i>
+                            <span>Cara Main</span>
+                        </button>
+
+                        <p id="puzzle-4-feedback" class="fs-3 font-title" style="height: 2rem;"></p>
+                        
+                        <!-- Kontainer untuk puzzle -->
+                        <div id="puzzle-game-container">
+                            <div id="puzzle-grid-target">
+                            </div>
+                            
+                            <div id="puzzle-pieces-source">
+                            </div>
+                        </div>
+
+                        <button id="reset-puzzle-4-btn" class="quiz-btn bg-orange-500 shadow-orange-700 d-none mt-4">
+                            Ulangi Puzzle
+                        </button>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <!-- Depan Halaman 9 (Daftar Pustaka) -->
+                    <div class="page-content flex-center-col gap-3" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+
+						<h2 class="fs-2 md:fs-2 text-primary-emphasis mb-5 font-title">Daftar Pustaka</h2>                        
+							<ul class="list-unstyled text-start fs-sm fs-md-6 space-y-3 ps-4" style="list-style-type: disc; list-style-position: outside;">
+								<li>Nirmala, Ika. (2025). *Konsep Buku Cerita Interaktif PAUD*. Jakarta.</li>
+								<li>Font Awesome. (2025). *Ikon Vektor*. Diakses dari https://fontawesome.com</li>
+								<li>Bootstrap. (2025). *CSS Framework*. Diakses dari https://getbootstrap.com</li>
+								<li>Google Fonts. (2025). *Fredoka Font Family*. Diakses dari https://fonts.google.com</li>
+								<li>Sound Informasi.(2025). Text to Speech. daiskes dari https://elevenlabs.io/</li>
+                                <li>
+                                    Google Gemini. (2025). *Aset Gambar Digital (Sampul.png, bg2.png, Sapi.png, Domba.png, Ayam.png, Kuda.png, Lebah.png, Bebek.png)*. Generate dari https://gemini.ai
+                                </li>
+                                <li>
+                                    Pixabay. (2025). *Efek Suara dan Musik Latar (Balik.mp3, Wrong.mp3, Klik.mp3, bgmusic.mp3)*. Diakses dari https://pixabay.com/sound-effects/
+                                </li>
+							</ul>
+
+                    </div>
+                    
+                    <!-- Belakang Halaman 9 (Penulis) -->
+                    <div class="page-content back-side flex-center-col penulis-bg">
+                        <h2 class="fs-2 md:fs-1 text-primary-emphasis mb-5 font-title">Penulis</h2>
+
+                        <img src="image/IkaNirmala.jpg" alt="Ika Nirmala" class="object-fit-contain mb-5 img-md-larger" style="border-radius: 50%; width: 8rem; height: 8rem;">
+                        
+                        <h3 class="fs-3 fw-medium text-blue-emphasis">Ika Nirmala, M.Pd</h3>
+                        <p class="text-primary-emphasis fs-4 mt-4" style="max-width: 24rem;">
+                            Penulis adalah seorang pendidik yang berdedikasi untuk menciptakan media pembelajaran yang interaktif dan menyenangkan bagi anak-anak Indonesia.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <!-- Depan Halaman 10 (Hak Cipta) -->
+					<div class="page-content flex-center-col text-center text-secondary bg-gradient-bangbin1">
+                        <a href="https://www.kemdikbud.go.id" target="_blank" class="hover-scale" title="Kunjungi Website Kemdikbud">
+                            <img src="image/favicon.ico" alt="Logo Kemdikbud" class="object-fit-contain mb-4 img-md-larger" style="width: 8rem; height: 8rem;">
+                        </a>
+                        
+                        <p class="fw-medium text-dark-emphasis fs-5">Hak Cipta Milik Direktorat Pendidikan Anak Usia Dini</p>
+                        <p class="fs-6">
+                            Direktorat Jendral Pendidikan Anak Usia Dini, Pendidikan Dasar, Pendidikan Menengah.
+                        </p>
+                        <p class="fs-6">Kementrian Pendidikan Dasar dan Menengah</p>
+                        <p class="fw-medium mt-1">Tahun 2025</p>
+                        
+                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-4 gap-md-5 mt-5">
+                            <img src="image/logo-bermutu.png" alt="Logo Bermutu" class="w-auto object-fit-contain" style="height: 2.5rem;" title="Bermutu">
+                            <img src="image/logo-paudpedia.png" alt="Logo Paudpedia" class="w-auto object-fit-contain" style="height: 2.5rem;" title="Paudpedia">
+                            <img src="image/logo-ramah.png" alt="Logo Ramah Anak" class="w-auto object-fit-contain" style="height: 2.5rem;" title="Ramah Anak">
+                        </div>
+                    </div>
+                    <!-- Sampul Belakang -->
+                    <div class="page-content back-side cover flex-center-col text-white" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
+                         <h1 class="text-black display-5 fw-bold font-title">SELESAI!</h1>
+						 <img src="image/favicon.ico" alt="Logo Kemdikbud" class="object-fit-contain mb-4 img-md-larger" style="width: 8rem; height: 8rem;">
+                         <h2 class="text-black fs-3">Kamu Pintar!</h2>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+            <button id="prev-btn" class="nav-button">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button id="mute-btn" class="nav-button bg-orange-500 shadow-orange-700" style="width: 50px; height: 50px; font-size: 20px; box-shadow: 0 6px 0 #c2410c;">
+                <i class="fas fa-volume-high"></i>
+            </button>
+            <button id="next-btn" class="nav-button">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+
+    <audio id="sound-sapi" src="sound/Sapi.mp3" preload="auto"></audio>
+    <audio id="sound-domba" src="sound/Domba.mp3" preload="auto"></audio>
+    <audio id="sound-ayam" src="sound/Ayam.mp3" preload="auto"></audio>
+    <audio id="sound-kuda" src="sound/Kuda.mp3" preload="auto"></audio>
+    <audio id="sound-lebah" src="sound/Lebah.mp3" preload="auto"></audio>
+    <audio id="sound-bebek" src="sound/Bebek.mp3" preload="auto"></audio>
+
+    <audio id="info-sapi" src="sound/Bangbin-Sapi.mp3" preload="auto"></audio>
+    <audio id="info-domba" src="sound/Bangbin-Domba.mp3" preload="auto"></audio>
+    <audio id="info-ayam" src="sound/Bangbin-Ayam.mp3" preload="auto"></audio>
+    <audio id="info-kuda" src="sound/Bangbin-Kuda.mp3" preload="auto"></audio>
+    <audio id="info-lebah" src="sound/Bangbin-Lebah.mp3" preload="auto"></audio>
+    <audio id="info-bebek" src="sound/Bangbin-Bebek.mp3" preload="auto"></audio>
+
+    <audio id="sound-petunjuk1" src="sound/Petunjuk1.mp3" preload="auto"></audio>
+    <audio id="sound-petunjuk2" src="sound/Petunjuk2.mp3" preload="auto"></audio>
+    <audio id="sound-petunjuk3" src="sound/Petunjuk3.mp3" preload="auto"></audio>
+    <audio id="sound-petunjuk4" src="sound/Petunjuk4.mp3" preload="auto"></audio>
+
+    <audio id="sound-tutor1" src="sound/TutorGame1.mp3" preload="auto"></audio>
+    <audio id="sound-tutor2" src="sound/TutorGame2.mp3" preload="auto"></audio>
+    <audio id="sound-tutor3" src="sound/TutorGame3.mp3" preload="auto"></audio>
+    <audio id="sound-tutor4" src="sound/TutorGame4.mp3" preload="auto"></audio>
+    
+    <audio id="sound-click" src="sound/Klik.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="sound/Wrong.mp3" preload="auto"></audio>
+    <audio id="sound-flip" src="sound/Balik.mp3" preload="auto"></audio>
+    <audio id="sound-bgm" src="sound/bgmusic.mp3" preload="auto" loop></audio>
+    <audio id="sound-menang" src="sound/Menang.mp3" preload="auto"></audio>
+
+
+    <script>
+	const _0x462f47=_0x38de;(function(_0x5204d9,_0x5763fe){const _0x8d1988=_0x38de,_0x5b63b2=_0x5204d9();while(!![]){try{const _0x30b273=parseInt(_0x8d1988(0x12d))/0x1*(-parseInt(_0x8d1988(0x125))/0x2)+parseInt(_0x8d1988(0x1af))/0x3+parseInt(_0x8d1988(0x1c5))/0x4*(parseInt(_0x8d1988(0x194))/0x5)+-parseInt(_0x8d1988(0x11a))/0x6+parseInt(_0x8d1988(0x16e))/0x7*(parseInt(_0x8d1988(0x150))/0x8)+parseInt(_0x8d1988(0x1d7))/0x9+-parseInt(_0x8d1988(0x119))/0xa*(parseInt(_0x8d1988(0x16b))/0xb);if(_0x30b273===_0x5763fe)break;else _0x5b63b2['push'](_0x5b63b2['shift']());}catch(_0x1dbd3c){_0x5b63b2['push'](_0x5b63b2['shift']());}}}(_0x5bde,0x1cf41));const soundMap={'moo':document[_0x462f47(0x14b)](_0x462f47(0x12b)),'baa':document['getElementById'](_0x462f47(0x1c3)),'cluck':document['getElementById']('sound-ayam'),'neigh':document[_0x462f47(0x14b)](_0x462f47(0x1d5)),'buzz':document[_0x462f47(0x14b)](_0x462f47(0x144)),'quack':document['getElementById'](_0x462f47(0x16a))},infoSoundMap={'sapi':document[_0x462f47(0x14b)](_0x462f47(0x183)),'domba':document[_0x462f47(0x14b)](_0x462f47(0x1d9)),'ayam':document['getElementById']('info-ayam'),'kuda':document[_0x462f47(0x14b)](_0x462f47(0x158)),'lebah':document[_0x462f47(0x14b)](_0x462f47(0x199)),'bebek':document[_0x462f47(0x14b)]('info-bebek')},petunjukSoundMap={'petunjuk1':document[_0x462f47(0x14b)](_0x462f47(0x15e)),'petunjuk2':document['getElementById'](_0x462f47(0x13a)),'petunjuk3':document[_0x462f47(0x14b)](_0x462f47(0x174)),'petunjuk4':document[_0x462f47(0x14b)](_0x462f47(0x197))},tutorSoundMap={'tutor1':document[_0x462f47(0x14b)](_0x462f47(0x152)),'tutor2':document[_0x462f47(0x14b)](_0x462f47(0x1ba)),'tutor3':document['getElementById'](_0x462f47(0x180)),'tutor4':document[_0x462f47(0x14b)](_0x462f47(0x11f))},animalImageMap={'sapi':'image/Sapi.png','domba':_0x462f47(0x1a1),'ayam':_0x462f47(0x145),'kuda':_0x462f47(0x1dd),'lebah':_0x462f47(0x130),'bebek':_0x462f47(0x182)},soundQuizMap={'moo':_0x462f47(0x170),'baa':_0x462f47(0x133),'cluck':'ayam','neigh':_0x462f47(0x1c6),'buzz':_0x462f47(0x179),'quack':_0x462f47(0x151)};let soundClick,soundWrong,soundFlip,soundBgm,soundMenang;function stopAllSounds(_0x91fb3=null){const _0x3621ea=_0x462f47,_0x43b866=[...Object[_0x3621ea(0x1a8)](soundMap),...Object[_0x3621ea(0x1a8)](infoSoundMap),...Object[_0x3621ea(0x1a8)](petunjukSoundMap),...Object[_0x3621ea(0x1a8)](tutorSoundMap),soundClick,soundWrong,soundFlip,soundMenang];_0x43b866[_0x3621ea(0x10f)](_0x3a6c90=>{const _0x21ab36=_0x3621ea;_0x3a6c90&&_0x3a6c90!==_0x91fb3&&(_0x3a6c90['pause'](),_0x3a6c90[_0x21ab36(0x1b3)]=0x0);});}function playSound(_0x195fa6){const _0x47c6b5=_0x462f47;stopAllSounds();let _0x48f2aa;if(soundMap[_0x195fa6])_0x48f2aa=soundMap[_0x195fa6];else{const _0x340221=Object[_0x47c6b5(0x1ce)](soundQuizMap)[_0x47c6b5(0x1c8)](_0xfb0a55=>soundQuizMap[_0xfb0a55]===_0x195fa6);_0x340221&&soundMap[_0x340221]&&(_0x48f2aa=soundMap[_0x340221]);}_0x48f2aa&&_0x48f2aa[_0x47c6b5(0x1c1)]()[_0x47c6b5(0x18c)](_0x3119ea=>{const _0x583587=_0x47c6b5;_0x3119ea[_0x583587(0x1a3)]!=='NotAllowedError'&&console[_0x583587(0x1a4)](_0x583587(0x1c2),_0x3119ea);});}function playInfoSound(_0x4ea2d8){const _0x498072=_0x462f47;stopAllSounds();const _0x47cfc8={'sapi':document[_0x498072(0x14b)](_0x498072(0x183)),'domba':document[_0x498072(0x14b)](_0x498072(0x1d9)),'ayam':document[_0x498072(0x14b)]('info-ayam'),'kuda':document[_0x498072(0x14b)](_0x498072(0x158)),'lebah':document['getElementById'](_0x498072(0x199)),'bebek':document[_0x498072(0x14b)](_0x498072(0x161))},_0x591ad4=_0x47cfc8[_0x4ea2d8];_0x591ad4&&_0x591ad4[_0x498072(0x1c1)]()['catch'](_0x1bea09=>{const _0x368a73=_0x498072;_0x1bea09[_0x368a73(0x1a3)]!==_0x368a73(0x1aa)&&console[_0x368a73(0x1a4)](_0x368a73(0x147),_0x1bea09);});}function _0x38de(_0x2eb9a2,_0x42cce0){const _0x5bde74=_0x5bde();return _0x38de=function(_0x38debd,_0x474108){_0x38debd=_0x38debd-0x10f;let _0x1b1d54=_0x5bde74[_0x38debd];return _0x1b1d54;},_0x38de(_0x2eb9a2,_0x42cce0);}function playPetunjukSound(_0x675efd){const _0x31b4e8=_0x462f47;stopAllSounds();const _0x1af4e0=petunjukSoundMap[_0x675efd];_0x1af4e0&&_0x1af4e0[_0x31b4e8(0x1c1)]()[_0x31b4e8(0x18c)](_0x3bcce4=>{const _0x2f6d97=_0x31b4e8;_0x3bcce4[_0x2f6d97(0x1a3)]!=='NotAllowedError'&&console['error'](_0x2f6d97(0x1a0),_0x3bcce4);});}function playTutorSound(_0xde0bc9){const _0x255091=_0x462f47;stopAllSounds();const _0x34b4f5=tutorSoundMap[_0xde0bc9];_0x34b4f5&&_0x34b4f5[_0x255091(0x1c1)]()[_0x255091(0x18c)](_0x536e92=>{const _0x1a3d76=_0x255091;_0x536e92[_0x1a3d76(0x1a3)]!==_0x1a3d76(0x1aa)&&console[_0x1a3d76(0x1a4)](_0x1a3d76(0x15b),_0x536e92);});}function playClickSound(){const _0x23740f=_0x462f47;soundClick&&(soundClick[_0x23740f(0x1b3)]=0x0,soundClick[_0x23740f(0x1c1)]()[_0x23740f(0x18c)](_0x4ba52c=>{}));}function _0x5bde(){const _0x598da5=['info-lebah','fa-question','.puzzle-piece.puzzle-shadow','dragover','offsetWidth','click','hasChildNodes','Gagal\x20memutar\x20audio\x20petunjuk:','image/Domba.png','.puzzle-piece.animal','name','error','.card-back\x20i','puzzle-pieces-source','add','values','neigh','NotAllowedError','[data-match=\x22horse\x22]','url(','0%\x20100%','animal','416589HyyIGt','none','target','disabled','currentTime','fa-volume-high','reset-memory-btn','dataset','next-quiz-btn','appendChild','backgroundPosition','sound-tutor2','\x22\x20alt=\x22','fs-3\x20font-title\x20text-danger','milk-fill-anim','border','bee-btn','BGM\x20play\x20failed,\x20user\x20interaction\x20needed.','play','Gagal\x20memutar\x20audio:','sound-domba','tutor-game-3','12BTjoaO','kuda','querySelectorAll','find','sound-menang','flipped','fa-volume-mute','quiz-options-container','horse-run-anim','keys','muted','horse-btn','duck-btn','random','remove','puzzle-shadows-container','sound-kuda','placed','158202rjmrnK','zIndex','info-domba','sort','prev','preventDefault','image/Kuda.png','forEach','Coba\x20Lagi\x20Nanti!','className','sound-wrong','textContent','.puzzle-piece','.egg-draggable','drag-over','opacity','next-btn','10QCBHZq','521292XTNnrl','Permainan\x20Selesai,\x20Kamu\x20Hebat!','memory-grid','translateY(0)\x20rotate(0deg)','answer','sound-tutor4','match','[data-match=\x22chicken\x22]','play-quiz-sound-btn','tutor4','addEventListener','2JWRmIz','floor','targetPage','removeEventListener','tutor-game-1','Benar!','sound-sapi','dragend','76913hjPHhX','createElement','sound-click','image/Lebah.png','next','button','domba','.daftar-isi-item','dataTransfer','parentElement','quiz-feedback','egg1','transform','sound-petunjuk2','selected','100%\x200%','egg2','d-none','classList','draggable','matched','moo','ayam','sound-lebah','image/Ayam.png','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22card-face\x20card-front\x22><img\x20src=\x22','Gagal\x20memutar\x20audio\x20info:','dragleave','[data-match=\x22cow\x22]','innerHTML','getElementById','buzz','fa-check','[id^=\x22tutor-game-\x22]','puzzle-4-feedback','87352DKszmq','bebek','sound-tutor1','reset-puzzle-btn','touchend','milk-fill','memory-card','pos','info-kuda','getData','body','Gagal\x20memutar\x20audio\x20tutorial:','wrong','onclick','sound-petunjuk1','contains','push','info-bebek','drop','Bukan\x20disitu!','setData','sound','\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22card-face\x20card-back\x22><i\x20class=\x22fa-solid\x20fa-question\x22></i></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','dragging','style','<img\x20src=\x22','sound-bebek','312763GXcdhy','tutor-game-2','dragstart','42rjWQHJ','Bukan!','sapi','.puzzle-piece-drag','.quiz-option','div','sound-petunjuk3','egg3','children','puzzle-feedback','fs-3\x20font-title\x20text-success','lebah','cluck','wool-interaction','text/plain','Cocok!','Ulangi\x20Kuis\x20Suara','Hebat,\x20Selesai!','sound-tutor3','sound-flip','image/Bebek.png','info-sapi','egg-feedback','.petunjuk-item','querySelector','[draggable=\x22true\x22]','reset-puzzle-4-btn','options','tutor-game-4','from','catch','closest','log','BGM\x20auto-play\x20failed,\x20waiting\x20for\x20interaction.','puzzle-grid-target','tutor1','bee-fly-anim','water-splash','148110GqzaWl','backgroundImage','sound-bgm','sound-petunjuk4','length'];_0x5bde=function(){return _0x598da5;};return _0x5bde();}function playWrongSound(){const _0xca4c75=_0x462f47;soundWrong&&(soundWrong[_0xca4c75(0x1b3)]=0x0,soundWrong[_0xca4c75(0x1c1)]()['catch'](_0x8fb7f=>{}));}function playFlipSound(){const _0x4c4ce6=_0x462f47;soundFlip&&(soundFlip[_0x4c4ce6(0x1b3)]=0x0,soundFlip['play']()[_0x4c4ce6(0x18c)](_0x57c8f2=>{}));}function playWinSound(){const _0x5caa29=_0x462f47;soundMenang&&(stopAllSounds(),soundMenang[_0x5caa29(0x1b3)]=0x0,soundMenang[_0x5caa29(0x1c1)]()[_0x5caa29(0x18c)](_0x13e1f8=>{}));}document[_0x462f47(0x124)]('DOMContentLoaded',()=>{const _0x196d88=_0x462f47;soundClick=document['getElementById'](_0x196d88(0x12f)),soundWrong=document[_0x196d88(0x14b)](_0x196d88(0x112)),soundFlip=document[_0x196d88(0x14b)](_0x196d88(0x181)),soundBgm=document['getElementById'](_0x196d88(0x196)),soundMenang=document[_0x196d88(0x14b)](_0x196d88(0x1c9));const _0x12c647=document[_0x196d88(0x14b)]('mute-btn'),_0xace53e=_0x12c647[_0x196d88(0x186)]('i');let _0x275078=![];soundBgm&&(soundBgm['volume']=0.3);_0x12c647[_0x196d88(0x124)](_0x196d88(0x19e),()=>{const _0x8c65dd=_0x196d88;_0x275078=!_0x275078;soundBgm&&(soundBgm[_0x8c65dd(0x1cf)]=_0x275078);if(_0x275078){_0xace53e[_0x8c65dd(0x13f)]['remove'](_0x8c65dd(0x1b4)),_0xace53e[_0x8c65dd(0x13f)][_0x8c65dd(0x1a7)](_0x8c65dd(0x1cb));if(soundBgm)soundBgm['pause']();}else _0xace53e['classList'][_0x8c65dd(0x1d3)](_0x8c65dd(0x1cb)),_0xace53e['classList'][_0x8c65dd(0x1a7)](_0x8c65dd(0x1b4)),soundBgm&&soundBgm['play']()[_0x8c65dd(0x18c)](_0x5d2c31=>console[_0x8c65dd(0x18e)](_0x8c65dd(0x1c0)));});function _0x3b7fc7(){const _0x425dbe=_0x196d88;!_0x275078&&soundBgm&&soundBgm['play']()['catch'](_0x86a9c3=>console[_0x425dbe(0x18e)](_0x425dbe(0x18f))),document[_0x425dbe(0x15a)][_0x425dbe(0x128)](_0x425dbe(0x19e),_0x3b7fc7),document[_0x425dbe(0x15a)][_0x425dbe(0x128)]('touchend',_0x3b7fc7);}document[_0x196d88(0x15a)]['addEventListener'](_0x196d88(0x19e),_0x3b7fc7),document[_0x196d88(0x15a)][_0x196d88(0x124)](_0x196d88(0x154),_0x3b7fc7);const _0x16972a=document[_0x196d88(0x1c7)]('.page'),_0x173b58=document['getElementById']('prev-btn'),_0x150ad5=document[_0x196d88(0x14b)](_0x196d88(0x118));let _0x36477c=0x0,_0x270061=![];const _0x1d01f7=_0x16972a[_0x196d88(0x198)];function _0xb4ff4a(){const _0x813076=_0x196d88;_0x16972a[_0x813076(0x10f)]((_0x3d0f0d,_0x108a6f)=>{const _0x5da47f=_0x813076;_0x108a6f<_0x36477c?_0x3d0f0d[_0x5da47f(0x168)][_0x5da47f(0x1d8)]=_0x108a6f+0x1:_0x3d0f0d[_0x5da47f(0x168)][_0x5da47f(0x1d8)]=_0x1d01f7-_0x108a6f;});}function _0x2d3cc9(_0x2275e4){const _0x449192=_0x196d88;if(_0x270061)return;stopAllSounds(),playFlipSound();if(_0x2275e4==='next'){if(_0x36477c>=_0x1d01f7)return;_0x270061=!![];const _0x5c6846=_0x16972a[_0x36477c];_0x5c6846[_0x449192(0x168)][_0x449192(0x1d8)]=_0x1d01f7+0x1,_0x5c6846[_0x449192(0x13f)][_0x449192(0x1a7)](_0x449192(0x1ca)),_0x36477c++;}else{if(_0x2275e4===_0x449192(0x1db)){if(_0x36477c<=0x0)return;_0x270061=!![],_0x36477c--;const _0x3534bf=_0x16972a[_0x36477c];_0x3534bf['style']['zIndex']=_0x1d01f7+0x1,_0x3534bf[_0x449192(0x13f)][_0x449192(0x1d3)](_0x449192(0x1ca));}}setTimeout(()=>{_0x270061=![],_0xb4ff4a();},0x320);}function _0xc52881(_0x3fb7aa){const _0x266f10=_0x196d88;if(_0x270061)return;if(_0x3fb7aa===_0x36477c)return;stopAllSounds(),playClickSound();if(_0x3fb7aa===_0x36477c+0x1)_0x2d3cc9(_0x266f10(0x131));else _0x3fb7aa===_0x36477c-0x1?_0x2d3cc9(_0x266f10(0x1db)):(_0x270061=!![],_0x16972a[_0x266f10(0x10f)]((_0x165ca6,_0x5140ee)=>{const _0x472ce4=_0x266f10;_0x5140ee<_0x3fb7aa?_0x165ca6['classList'][_0x472ce4(0x1a7)](_0x472ce4(0x1ca)):_0x165ca6[_0x472ce4(0x13f)]['remove']('flipped');}),_0x36477c=_0x3fb7aa,setTimeout(()=>{_0x270061=![],_0xb4ff4a();},0x12c));}_0x173b58[_0x196d88(0x124)](_0x196d88(0x19e),()=>{const _0x11b90b=_0x196d88;playClickSound(),_0x2d3cc9(_0x11b90b(0x1db));}),_0x150ad5[_0x196d88(0x124)]('click',()=>{const _0x43f883=_0x196d88;playClickSound(),_0x2d3cc9(_0x43f883(0x131));}),_0x16972a['forEach']((_0x3447aa,_0x5bd64d)=>{_0x3447aa['addEventListener']('click',_0x9ee42b=>{const _0x556976=_0x38de;if(_0x9ee42b[_0x556976(0x1b1)]['closest'](_0x556976(0x132))||_0x9ee42b['target']['closest']('img[id$=\x22-btn\x22]')||_0x9ee42b['target'][_0x556976(0x18d)]('img[onclick]')||_0x9ee42b['target'][_0x556976(0x18d)]('a')||_0x9ee42b[_0x556976(0x1b1)][_0x556976(0x18d)](_0x556976(0x187))||_0x9ee42b[_0x556976(0x1b1)][_0x556976(0x18d)]('.memory-card')||_0x9ee42b[_0x556976(0x1b1)][_0x556976(0x18d)](_0x556976(0x171))||_0x9ee42b[_0x556976(0x1b1)][_0x556976(0x18d)]('.petunjuk-item')||_0x9ee42b['target'][_0x556976(0x18d)](_0x556976(0x14e))||_0x9ee42b['target'][_0x556976(0x18d)](_0x556976(0x134)))return;const _0x20694d=_0x3447aa[_0x556976(0x13f)][_0x556976(0x15f)](_0x556976(0x1ca));if(_0x20694d&&_0x5bd64d===_0x36477c-0x1)_0x2d3cc9(_0x556976(0x1db));else!_0x20694d&&_0x5bd64d===_0x36477c&&_0x2d3cc9(_0x556976(0x131));});}),_0xb4ff4a(),document['querySelectorAll'](_0x196d88(0x134))['forEach'](_0x2dd29b=>{const _0x526561=_0x196d88;_0x2dd29b[_0x526561(0x124)]('click',_0x18b730=>{const _0x5ed462=_0x526561,_0x5bc314=_0x18b730['currentTarget'][_0x5ed462(0x1b6)][_0x5ed462(0x127)];if(_0x5bc314){const _0x128225=parseInt(_0x5bc314,0xa);_0xc52881(_0x128225);}});}),document['querySelectorAll'](_0x196d88(0x185))['forEach'](_0x2b1009=>{const _0x318e24=_0x196d88;_0x2b1009[_0x318e24(0x124)]('click',()=>{const _0x56e6ed=_0x318e24;playClickSound();const _0xe84382=_0x2b1009[_0x56e6ed(0x1b6)][_0x56e6ed(0x165)];_0xe84382&&playPetunjukSound(_0xe84382);});}),document['getElementById']('cow-btn')[_0x196d88(0x124)](_0x196d88(0x19e),()=>{const _0x5b791c=_0x196d88;playClickSound(),playInfoSound('sapi');const _0x93cd52=document[_0x5b791c(0x14b)]('milk-interaction'),_0x1aa48c=document[_0x5b791c(0x14b)](_0x5b791c(0x155));_0x93cd52[_0x5b791c(0x13f)]['remove'](_0x5b791c(0x13e)),_0x1aa48c[_0x5b791c(0x13f)]['remove'](_0x5b791c(0x1bd)),void _0x1aa48c[_0x5b791c(0x19d)],_0x1aa48c[_0x5b791c(0x13f)][_0x5b791c(0x1a7)](_0x5b791c(0x1bd));}),document['getElementById']('sheep-btn')[_0x196d88(0x124)](_0x196d88(0x19e),()=>{const _0x1b16a5=_0x196d88;playClickSound(),playInfoSound(_0x1b16a5(0x133));const _0x444b90=document[_0x1b16a5(0x14b)](_0x1b16a5(0x17b));_0x444b90['classList']['remove'](_0x1b16a5(0x13e)),_0x444b90[_0x1b16a5(0x168)][_0x1b16a5(0x117)]='1',_0x444b90[_0x1b16a5(0x168)]['transform']='translateY(-20px)\x20rotate(-15deg)',setTimeout(()=>{const _0x5615a2=_0x1b16a5;_0x444b90['style'][_0x5615a2(0x117)]='0',_0x444b90[_0x5615a2(0x168)][_0x5615a2(0x139)]=_0x5615a2(0x11d),setTimeout(()=>_0x444b90['classList'][_0x5615a2(0x1a7)](_0x5615a2(0x13e)),0x1f4);},0x5dc);});const _0x1289b7=document[_0x196d88(0x1c7)](_0x196d88(0x115)),_0x3ae7b5=document[_0x196d88(0x14b)]('egg-basket'),_0xa5b371=document[_0x196d88(0x14b)]('egg-nest'),_0x16cb48=document[_0x196d88(0x14b)](_0x196d88(0x184));let _0x2a8b60=0x0;const _0x489a1c=0x3;function _0x119aed(){const _0x1d6a74=_0x196d88;if(!_0x3ae7b5||!_0xa5b371)return;_0x3ae7b5['innerHTML']='';if(_0x16cb48)_0x16cb48[_0x1d6a74(0x113)]='';_0x2a8b60=0x0;const _0x479285=[_0x1d6a74(0x138),_0x1d6a74(0x13d),_0x1d6a74(0x175)];_0x479285[_0x1d6a74(0x10f)](_0x350f4a=>{const _0x177013=_0x1d6a74,_0x5d0294=document[_0x177013(0x14b)](_0x350f4a);_0x5d0294&&(_0x5d0294[_0x177013(0x140)]=!![],_0x5d0294[_0x177013(0x13f)][_0x177013(0x1d3)](_0x177013(0x1d6),_0x177013(0x167)),_0x5d0294[_0x177013(0x136)]!==_0xa5b371&&_0xa5b371['appendChild'](_0x5d0294));});}_0x1289b7['forEach'](_0x509116=>{const _0x47a78a=_0x196d88;_0x509116[_0x47a78a(0x124)](_0x47a78a(0x16d),_0x37615a=>{const _0x44ff14=_0x47a78a;playSound(_0x44ff14(0x17a)),_0x37615a[_0x44ff14(0x135)]['setData'](_0x44ff14(0x17c),_0x37615a[_0x44ff14(0x1b1)]['id']),_0x509116['classList']['add'](_0x44ff14(0x167));if(_0x16cb48)_0x16cb48[_0x44ff14(0x113)]='';}),_0x509116['addEventListener']('dragend',()=>{const _0x5ef9d4=_0x47a78a;_0x509116[_0x5ef9d4(0x13f)][_0x5ef9d4(0x1d3)](_0x5ef9d4(0x167));});});_0x3ae7b5&&(_0x3ae7b5[_0x196d88(0x124)](_0x196d88(0x19c),_0x48825c=>{const _0x4948c0=_0x196d88;_0x48825c[_0x4948c0(0x1dc)](),_0x3ae7b5[_0x4948c0(0x13f)][_0x4948c0(0x1a7)](_0x4948c0(0x116));}),_0x3ae7b5[_0x196d88(0x124)](_0x196d88(0x148),()=>{const _0x45f541=_0x196d88;_0x3ae7b5['classList'][_0x45f541(0x1d3)]('drag-over');}),_0x3ae7b5[_0x196d88(0x124)](_0x196d88(0x162),_0x102567=>{const _0x317bb7=_0x196d88;_0x102567[_0x317bb7(0x1dc)](),_0x3ae7b5[_0x317bb7(0x13f)][_0x317bb7(0x1d3)](_0x317bb7(0x116));const _0x4cf732=_0x102567[_0x317bb7(0x135)][_0x317bb7(0x159)](_0x317bb7(0x17c)),_0x1773fa=document[_0x317bb7(0x14b)](_0x4cf732);if(_0x1773fa&&!_0x1773fa[_0x317bb7(0x13f)][_0x317bb7(0x15f)](_0x317bb7(0x1d6))){playClickSound(),_0x3ae7b5[_0x317bb7(0x1b8)](_0x1773fa),_0x1773fa['draggable']=![],_0x1773fa[_0x317bb7(0x13f)][_0x317bb7(0x1a7)](_0x317bb7(0x1d6)),_0x2a8b60++;if(_0x2a8b60===_0x489a1c){if(_0x16cb48)_0x16cb48['textContent']='Hebat!\x20Semua\x20telur\x20aman!';setTimeout(_0x119aed,0xbb8);}}}));document[_0x196d88(0x14b)](_0x196d88(0x1d0))[_0x196d88(0x124)]('click',_0x5a5780=>{const _0x105148=_0x196d88;playClickSound(),playInfoSound(_0x105148(0x1c6));const _0x4ab84e=_0x5a5780['currentTarget'];_0x4ab84e['classList'][_0x105148(0x1a7)](_0x105148(0x1cd)),setTimeout(()=>_0x4ab84e[_0x105148(0x13f)][_0x105148(0x1d3)](_0x105148(0x1cd)),0x3e8);}),document[_0x196d88(0x14b)](_0x196d88(0x1bf))[_0x196d88(0x124)]('click',_0xaa3688=>{const _0x3a10fe=_0x196d88;playClickSound(),playInfoSound(_0x3a10fe(0x179));const _0x55b787=_0xaa3688['currentTarget'];_0x55b787[_0x3a10fe(0x13f)][_0x3a10fe(0x1a7)]('bee-fly-anim'),setTimeout(()=>_0x55b787[_0x3a10fe(0x13f)][_0x3a10fe(0x1d3)](_0x3a10fe(0x192)),0x1f4);}),document[_0x196d88(0x14b)](_0x196d88(0x1d1))[_0x196d88(0x124)](_0x196d88(0x19e),()=>{const _0x25fe84=_0x196d88;playClickSound(),playInfoSound(_0x25fe84(0x151));const _0x17eb16=document[_0x25fe84(0x14b)](_0x25fe84(0x193));_0x17eb16['classList'][_0x25fe84(0x1d3)]('d-none'),_0x17eb16[_0x25fe84(0x13f)]['add'](_0x25fe84(0x192)),setTimeout(()=>{const _0x117f87=_0x25fe84;_0x17eb16[_0x117f87(0x13f)][_0x117f87(0x1a7)](_0x117f87(0x13e)),_0x17eb16[_0x117f87(0x13f)]['remove'](_0x117f87(0x192));},0x1f4);}),document['getElementById'](_0x196d88(0x129))?.[_0x196d88(0x124)]('click',()=>{const _0x753894=_0x196d88;playClickSound(),playTutorSound(_0x753894(0x191));}),document[_0x196d88(0x14b)](_0x196d88(0x16c))?.['addEventListener']('click',()=>{playClickSound(),playTutorSound('tutor2');}),document['getElementById'](_0x196d88(0x1c4))?.[_0x196d88(0x124)](_0x196d88(0x19e),()=>{playClickSound(),playTutorSound('tutor3');}),document[_0x196d88(0x14b)](_0x196d88(0x18a))?.[_0x196d88(0x124)]('click',()=>{const _0x13ce29=_0x196d88;playClickSound(),playTutorSound(_0x13ce29(0x123));});const _0x5f33c6=[{'sound':_0x196d88(0x142),'options':[_0x196d88(0x170),'domba','ayam'],'answer':_0x196d88(0x170)},{'sound':_0x196d88(0x17a),'options':[_0x196d88(0x1c6),_0x196d88(0x143),_0x196d88(0x151)],'answer':_0x196d88(0x143)},{'sound':_0x196d88(0x1a9),'options':['lebah','kuda',_0x196d88(0x170)],'answer':_0x196d88(0x1c6)},{'sound':_0x196d88(0x14c),'options':['domba',_0x196d88(0x151),_0x196d88(0x179)],'answer':_0x196d88(0x179)}];let _0xd6b52e=0x0,_0xa1706a=!![];const _0xfdaad0=document['getElementById'](_0x196d88(0x122)),_0x4f9111=document[_0x196d88(0x14b)](_0x196d88(0x1cc)),_0x53d189=document['getElementById'](_0x196d88(0x137)),_0x30a040=document[_0x196d88(0x14b)](_0x196d88(0x1b7));function _0x576bf8(_0x37b0fd){const _0x45cb09=_0x196d88;if(!_0x53d189)return;if(_0x37b0fd>=_0x5f33c6['length']){_0x53d189[_0x45cb09(0x113)]=_0x45cb09(0x11b),_0x53d189['className']=_0x45cb09(0x178),_0xfdaad0['classList'][_0x45cb09(0x1a7)](_0x45cb09(0x13e)),_0x4f9111['classList']['add'](_0x45cb09(0x13e)),_0x30a040[_0x45cb09(0x113)]='Ulangi\x20Kuis\x20Suara',_0x30a040[_0x45cb09(0x13f)][_0x45cb09(0x1d3)](_0x45cb09(0x13e)),_0xa1706a=![],playWinSound();return;}_0xa1706a=!![];const _0x27af56=_0x5f33c6[_0x37b0fd];_0xfdaad0['classList'][_0x45cb09(0x1d3)](_0x45cb09(0x13e)),_0x4f9111[_0x45cb09(0x13f)][_0x45cb09(0x1d3)](_0x45cb09(0x13e)),_0x53d189['textContent']='',_0x30a040[_0x45cb09(0x13f)][_0x45cb09(0x1a7)](_0x45cb09(0x13e)),_0x30a040[_0x45cb09(0x113)]='Soal\x20Berikutnya',_0xfdaad0[_0x45cb09(0x15d)]=()=>{playClickSound(),playSound(_0x27af56['sound']);},_0x4f9111[_0x45cb09(0x14a)]='',_0x27af56[_0x45cb09(0x189)]['forEach']((_0x50cf45,_0x4745a9)=>{const _0x20bf03=_0x45cb09,_0x3db0f9=document[_0x20bf03(0x12e)]('button');_0x3db0f9['className']='quiz-option',_0x3db0f9[_0x20bf03(0x1b6)][_0x20bf03(0x1ae)]=_0x50cf45;const _0x51faac=animalImageMap[_0x50cf45];_0x3db0f9[_0x20bf03(0x14a)]=_0x20bf03(0x169)+_0x51faac+_0x20bf03(0x1bb)+_0x50cf45+'\x22>',_0x3db0f9[_0x20bf03(0x15d)]=()=>{const _0x58ea3e=_0x20bf03;playClickSound(),_0x18c08b(_0x50cf45,_0x27af56[_0x58ea3e(0x11e)],_0x3db0f9);},_0x4f9111[_0x20bf03(0x1b8)](_0x3db0f9);});}function _0x18c08b(_0x4c4fb1,_0xc51fbe,_0x1ebbbf){const _0x58674b=_0x196d88;if(!_0xa1706a)return;_0xa1706a=![];const _0x548eed=_0x4f9111['querySelectorAll'](_0x58674b(0x172));_0x548eed[_0x58674b(0x10f)](_0x3e3926=>{const _0x2f5597=_0x58674b;_0x3e3926['disabled']=!![],_0x3e3926[_0x2f5597(0x1b6)]['animal']===_0xc51fbe&&_0x3e3926['classList'][_0x2f5597(0x1a7)]('correct');}),_0x4c4fb1===_0xc51fbe?(_0x53d189['textContent']=_0x58674b(0x12a),_0x53d189['className']=_0x58674b(0x178)):(playWrongSound(),_0x53d189[_0x58674b(0x113)]=_0x58674b(0x110),_0x53d189[_0x58674b(0x111)]='fs-3\x20font-title\x20text-danger',_0x1ebbbf[_0x58674b(0x13f)]['add'](_0x58674b(0x15c))),_0x30a040[_0x58674b(0x13f)][_0x58674b(0x1d3)](_0x58674b(0x13e));}_0x30a040&&_0x30a040['addEventListener'](_0x196d88(0x19e),()=>{const _0x267696=_0x196d88;playClickSound(),_0x30a040[_0x267696(0x113)]===_0x267696(0x17e)?_0xd6b52e=0x0:_0xd6b52e++,_0x576bf8(_0xd6b52e);});const _0x20faf7=document['getElementById']('puzzle-animals-container'),_0x22dd56=document[_0x196d88(0x14b)](_0x196d88(0x1d4)),_0x531c9e=document[_0x196d88(0x14b)](_0x196d88(0x177)),_0x36ea65=document['getElementById'](_0x196d88(0x153));_0x20faf7&&(_0x20faf7[_0x196d88(0x186)](_0x196d88(0x149))[_0x196d88(0x1b6)][_0x196d88(0x120)]='sapi',_0x20faf7[_0x196d88(0x186)](_0x196d88(0x121))[_0x196d88(0x1b6)]['match']=_0x196d88(0x143),_0x20faf7[_0x196d88(0x186)](_0x196d88(0x1ab))['dataset'][_0x196d88(0x120)]=_0x196d88(0x1c6));_0x22dd56&&(_0x22dd56['querySelector'](_0x196d88(0x149))['dataset'][_0x196d88(0x120)]=_0x196d88(0x170),_0x22dd56[_0x196d88(0x186)](_0x196d88(0x121))[_0x196d88(0x1b6)]['match']=_0x196d88(0x143),_0x22dd56['querySelector'](_0x196d88(0x1ab))[_0x196d88(0x1b6)]['match']=_0x196d88(0x1c6));let _0x5af33b=null,_0x957c82=0x0;const _0x4959ce=0x3;function _0x24bc5a(){const _0x4e3445=_0x196d88;if(!_0x22dd56||!_0x20faf7)return;const _0x106d69=Array[_0x4e3445(0x18b)](_0x22dd56[_0x4e3445(0x176)]);_0x106d69['sort'](()=>Math[_0x4e3445(0x1d2)]()-0.5),_0x106d69[_0x4e3445(0x10f)](_0x5234a2=>_0x22dd56[_0x4e3445(0x1b8)](_0x5234a2)),_0x957c82=0x0,_0x5af33b=null;if(_0x531c9e)_0x531c9e[_0x4e3445(0x113)]='';if(_0x36ea65)_0x36ea65['classList'][_0x4e3445(0x1a7)](_0x4e3445(0x13e));document[_0x4e3445(0x1c7)](_0x4e3445(0x114))[_0x4e3445(0x10f)](_0x3da980=>{const _0x557318=_0x4e3445;_0x3da980[_0x557318(0x13f)][_0x557318(0x1d3)](_0x557318(0x13b),_0x557318(0x141)),_0x3da980[_0x557318(0x1b2)]=![];});}_0x20faf7&&_0x20faf7[_0x196d88(0x124)](_0x196d88(0x19e),_0x31417a=>{const _0x40790d=_0x196d88,_0x71bf10=_0x31417a[_0x40790d(0x1b1)][_0x40790d(0x18d)](_0x40790d(0x1a2));if(!_0x71bf10||_0x71bf10['classList']['contains']('matched'))return;playClickSound();if(_0x71bf10===_0x5af33b){_0x71bf10['classList'][_0x40790d(0x1d3)]('selected'),_0x5af33b=null;return;}_0x5af33b&&_0x5af33b[_0x40790d(0x13f)][_0x40790d(0x1d3)](_0x40790d(0x13b));_0x5af33b=_0x71bf10,_0x5af33b[_0x40790d(0x13f)]['add'](_0x40790d(0x13b));if(_0x531c9e)_0x531c9e[_0x40790d(0x113)]='';});_0x22dd56&&_0x22dd56['addEventListener'](_0x196d88(0x19e),_0x28b06a=>{const _0x12cd2a=_0x196d88,_0x2ce516=_0x28b06a[_0x12cd2a(0x1b1)]['closest'](_0x12cd2a(0x19b));if(!_0x2ce516||_0x2ce516['classList'][_0x12cd2a(0x15f)](_0x12cd2a(0x141))||!_0x5af33b)return;playClickSound();if(_0x2ce516['dataset'][_0x12cd2a(0x120)]===_0x5af33b[_0x12cd2a(0x1b6)]['match']){_0x2ce516[_0x12cd2a(0x13f)]['add'](_0x12cd2a(0x141)),_0x5af33b[_0x12cd2a(0x13f)][_0x12cd2a(0x1a7)]('matched'),_0x2ce516['disabled']=!![],_0x5af33b['disabled']=!![],_0x5af33b=null,_0x957c82++;if(_0x531c9e)_0x531c9e['textContent']=_0x12cd2a(0x17d);if(_0x531c9e)_0x531c9e[_0x12cd2a(0x111)]=_0x12cd2a(0x178);}else{playWrongSound();if(_0x531c9e)_0x531c9e['textContent']=_0x12cd2a(0x16f);if(_0x531c9e)_0x531c9e[_0x12cd2a(0x111)]=_0x12cd2a(0x1bc);if(_0x5af33b)_0x5af33b[_0x12cd2a(0x13f)][_0x12cd2a(0x1d3)](_0x12cd2a(0x13b));_0x5af33b=null;}if(_0x957c82===_0x4959ce){if(_0x531c9e)_0x531c9e[_0x12cd2a(0x113)]='Hebat,\x20Selesai!';if(_0x36ea65)_0x36ea65[_0x12cd2a(0x13f)][_0x12cd2a(0x1d3)]('d-none');playWinSound();}});_0x36ea65&&_0x36ea65[_0x196d88(0x124)]('click',()=>{playClickSound(),_0x24bc5a();});const _0x39e9d3=document[_0x196d88(0x14b)](_0x196d88(0x11c)),_0x1bed87=document[_0x196d88(0x14b)]('memory-feedback'),_0x33cfc9=document[_0x196d88(0x14b)](_0x196d88(0x1b5)),_0x381943=Object[_0x196d88(0x1ce)](animalImageMap);let _0x1bed2e=[],_0x3bcf40=0x0,_0x36dc72=![];function _0x327cbb(){const _0x18d5d0=_0x196d88;if(!_0x39e9d3)return;_0x3bcf40=0x0,_0x36dc72=![],_0x1bed2e=[];if(_0x1bed87)_0x1bed87[_0x18d5d0(0x113)]='';if(_0x33cfc9)_0x33cfc9[_0x18d5d0(0x13f)][_0x18d5d0(0x1a7)]('d-none');_0x39e9d3[_0x18d5d0(0x14a)]='';const _0x238696=[..._0x381943,..._0x381943];_0x238696[_0x18d5d0(0x1da)](()=>Math['random']()-0.5),_0x238696[_0x18d5d0(0x10f)](_0x57384b=>{const _0x51948d=_0x18d5d0,_0x2a0678=document['createElement'](_0x51948d(0x173));_0x2a0678[_0x51948d(0x111)]=_0x51948d(0x156),_0x2a0678[_0x51948d(0x1b6)][_0x51948d(0x1ae)]=_0x57384b;const _0x566e06=animalImageMap[_0x57384b];_0x2a0678[_0x51948d(0x14a)]=_0x51948d(0x146)+_0x566e06+'\x22\x20alt=\x22'+_0x57384b+_0x51948d(0x166),_0x2a0678[_0x51948d(0x124)]('click',_0x39acd7),_0x39e9d3[_0x51948d(0x1b8)](_0x2a0678);});}function _0x39acd7(){const _0x3f5a60=_0x196d88;if(_0x36dc72)return;if(this===_0x1bed2e[0x0])return;if(this['classList']['contains'](_0x3f5a60(0x141)))return;playClickSound(),this[_0x3f5a60(0x13f)][_0x3f5a60(0x1a7)](_0x3f5a60(0x1ca)),_0x1bed2e[_0x3f5a60(0x160)](this),_0x1bed2e[_0x3f5a60(0x198)]===0x2&&(_0x36dc72=!![],_0x21633a());}function _0x21633a(){const _0x1ed935=_0x196d88,[_0x10c379,_0x244b5f]=_0x1bed2e,_0x513a07=_0x10c379[_0x1ed935(0x1b6)][_0x1ed935(0x1ae)]===_0x244b5f[_0x1ed935(0x1b6)][_0x1ed935(0x1ae)];_0x513a07?_0x32a45b(_0x10c379,_0x244b5f):_0x38c25b(_0x10c379,_0x244b5f);}function _0x32a45b(_0x2e7c93,_0x5d83aa){const _0x29649c=_0x196d88,_0x28477c=_0x2e7c93[_0x29649c(0x186)](_0x29649c(0x1a5)),_0x46152c=_0x5d83aa[_0x29649c(0x186)](_0x29649c(0x1a5));_0x28477c&&(_0x28477c[_0x29649c(0x13f)][_0x29649c(0x1d3)](_0x29649c(0x19a)),_0x28477c['classList'][_0x29649c(0x1a7)]('fa-check'));_0x46152c&&(_0x46152c[_0x29649c(0x13f)][_0x29649c(0x1d3)](_0x29649c(0x19a)),_0x46152c[_0x29649c(0x13f)][_0x29649c(0x1a7)](_0x29649c(0x14d)));_0x2e7c93[_0x29649c(0x13f)][_0x29649c(0x1d3)](_0x29649c(0x1ca)),_0x5d83aa[_0x29649c(0x13f)][_0x29649c(0x1d3)](_0x29649c(0x1ca)),_0x2e7c93[_0x29649c(0x13f)][_0x29649c(0x1a7)](_0x29649c(0x141)),_0x5d83aa[_0x29649c(0x13f)][_0x29649c(0x1a7)](_0x29649c(0x141)),_0x3bcf40++,_0x1bed2e=[],_0x36dc72=![];if(_0x3bcf40===_0x381943[_0x29649c(0x198)]){if(_0x1bed87)_0x1bed87[_0x29649c(0x113)]='Hebat,\x20Selesai!';if(_0x33cfc9)_0x33cfc9[_0x29649c(0x13f)][_0x29649c(0x1d3)](_0x29649c(0x13e));playWinSound();}}function _0x38c25b(_0x2defe1,_0x3ba4b4){playWrongSound(),setTimeout(()=>{const _0x1d1dc3=_0x38de;_0x2defe1[_0x1d1dc3(0x13f)]['remove'](_0x1d1dc3(0x1ca)),_0x3ba4b4[_0x1d1dc3(0x13f)]['remove'](_0x1d1dc3(0x1ca)),_0x1bed2e=[],_0x36dc72=![];},0x3e8);}_0x33cfc9&&_0x33cfc9[_0x196d88(0x124)](_0x196d88(0x19e),()=>{playClickSound(),_0x327cbb();});const _0x3347da=document['getElementById'](_0x196d88(0x190)),_0x1c15bd=document[_0x196d88(0x14b)](_0x196d88(0x1a6)),_0x12c867=document[_0x196d88(0x14b)](_0x196d88(0x14f)),_0x316aa6=document[_0x196d88(0x14b)](_0x196d88(0x188)),_0x524b41=['sapi',_0x196d88(0x143),'lebah'],_0x28f8e3=['0%\x200%',_0x196d88(0x13c),_0x196d88(0x1ad),'100%\x20100%'];let _0x1ab32e=null,_0x2fb9aa=0x0;function _0x57bb66(){const _0x4546f3=_0x196d88;if(!_0x3347da||!_0x1c15bd)return;_0x2fb9aa=0x0,_0x3347da['innerHTML']='',_0x1c15bd['innerHTML']='';if(_0x12c867)_0x12c867[_0x4546f3(0x113)]='';if(_0x316aa6)_0x316aa6[_0x4546f3(0x13f)]['add'](_0x4546f3(0x13e));const _0x1f236d=_0x524b41[Math[_0x4546f3(0x126)](Math[_0x4546f3(0x1d2)]()*_0x524b41[_0x4546f3(0x198)])],_0x457917=animalImageMap[_0x1f236d];let _0x23176d=[];for(let _0x10a75f=0x0;_0x10a75f<0x4;_0x10a75f++){const _0x25e876=document[_0x4546f3(0x12e)](_0x4546f3(0x173));_0x25e876[_0x4546f3(0x111)]='puzzle-drop-zone',_0x25e876[_0x4546f3(0x1b6)][_0x4546f3(0x157)]=_0x10a75f,_0x3347da['appendChild'](_0x25e876);const _0x1b935d=document[_0x4546f3(0x12e)]('div');_0x1b935d['className']='puzzle-piece-drag',_0x1b935d['draggable']=!![],_0x1b935d['dataset'][_0x4546f3(0x157)]=_0x10a75f,_0x1b935d['style'][_0x4546f3(0x195)]=_0x4546f3(0x1ac)+_0x457917+')',_0x1b935d[_0x4546f3(0x168)][_0x4546f3(0x1b9)]=_0x28f8e3[_0x10a75f],_0x23176d['push'](_0x1b935d);}_0x23176d['sort'](()=>Math[_0x4546f3(0x1d2)]()-0.5),_0x23176d[_0x4546f3(0x10f)](_0x44e06a=>{const _0x486ffe=_0x4546f3;_0x1c15bd[_0x486ffe(0x1b8)](_0x44e06a),_0x14525d(_0x44e06a);}),document[_0x4546f3(0x1c7)]('.puzzle-drop-zone')[_0x4546f3(0x10f)](_0x306137=>{_0x6aec9c(_0x306137);});}function _0x14525d(_0x49b6a1){const _0x4a0d54=_0x196d88;_0x49b6a1[_0x4a0d54(0x124)]('dragstart',_0x3297aa=>{const _0x3394b3=_0x4a0d54;_0x1ab32e=_0x49b6a1,_0x3297aa[_0x3394b3(0x135)][_0x3394b3(0x164)](_0x3394b3(0x17c),_0x49b6a1[_0x3394b3(0x1b6)][_0x3394b3(0x157)]),setTimeout(()=>_0x49b6a1[_0x3394b3(0x13f)][_0x3394b3(0x1a7)]('dragging'),0x0);if(_0x12c867)_0x12c867[_0x3394b3(0x113)]='';}),_0x49b6a1[_0x4a0d54(0x124)](_0x4a0d54(0x12c),()=>{const _0x124b45=_0x4a0d54;_0x1ab32e&&_0x1ab32e[_0x124b45(0x13f)][_0x124b45(0x1d3)](_0x124b45(0x167)),_0x1ab32e=null;});}function _0x6aec9c(_0x1bcf0e){const _0x4bb5b1=_0x196d88;_0x1bcf0e['addEventListener'](_0x4bb5b1(0x19c),_0x560259=>{const _0x2e44ef=_0x4bb5b1;_0x560259[_0x2e44ef(0x1dc)](),!_0x1bcf0e['hasChildNodes']()&&_0x1bcf0e[_0x2e44ef(0x13f)][_0x2e44ef(0x1a7)]('drag-over');}),_0x1bcf0e[_0x4bb5b1(0x124)](_0x4bb5b1(0x148),()=>{const _0x41a4bf=_0x4bb5b1;_0x1bcf0e[_0x41a4bf(0x13f)]['remove'](_0x41a4bf(0x116));}),_0x1bcf0e['addEventListener'](_0x4bb5b1(0x162),_0x191853=>{const _0x418db8=_0x4bb5b1;_0x191853[_0x418db8(0x1dc)](),_0x1bcf0e[_0x418db8(0x13f)][_0x418db8(0x1d3)](_0x418db8(0x116));if(_0x1bcf0e[_0x418db8(0x19f)]()||!_0x1ab32e)return;const _0xe7ec37=_0x1ab32e[_0x418db8(0x1b6)]['pos'],_0x5f3d39=_0x1bcf0e['dataset'][_0x418db8(0x157)];if(_0xe7ec37===_0x5f3d39){playClickSound(),_0x1bcf0e[_0x418db8(0x1b8)](_0x1ab32e),_0x1ab32e['draggable']=![],_0x1ab32e[_0x418db8(0x13f)][_0x418db8(0x1a7)](_0x418db8(0x1d6)),_0x1ab32e[_0x418db8(0x13f)]['remove']('dragging'),_0x1bcf0e[_0x418db8(0x168)][_0x418db8(0x1be)]=_0x418db8(0x1b0),_0x2fb9aa++;_0x12c867&&(_0x12c867[_0x418db8(0x113)]=_0x418db8(0x12a),_0x12c867['className']='fs-3\x20font-title\x20text-success');if(_0x2fb9aa===0x4){if(_0x12c867)_0x12c867['textContent']=_0x418db8(0x17f);if(_0x316aa6)_0x316aa6[_0x418db8(0x13f)]['remove'](_0x418db8(0x13e));playWinSound();}}else playWrongSound(),_0x12c867&&(_0x12c867['textContent']=_0x418db8(0x163),puzzle4Failure['className']=_0x418db8(0x1bc));});}_0x316aa6&&_0x316aa6[_0x196d88(0x124)]('click',()=>{playClickSound(),_0x57bb66();}),_0x576bf8(_0xd6b52e),_0x24bc5a(),_0x327cbb(),_0x57bb66(),_0x119aed();});
+    </script>
+</body>
+</html>
+
