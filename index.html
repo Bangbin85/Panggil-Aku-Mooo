@@ -3,22 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panggil Aku Mooooo!!!</title>
+    <title>Panggil Aku Mooo!!!</title>
     
     <link href="style/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="style/fontawesome/css/all.min.css" rel="stylesheet">
-	<link href="style/bangbinFonts.css" rel="stylesheet">
+    <!-- TAMBAHKAN INI: Memuat definisi font dari folder style/font/ -->
+    <link href="style/font/bangbinfont.css" rel="stylesheet">
     <link rel="icon" href="image/favicon.ico" type="image/x-icon">
 
     <style>
+        /* --- PENYESUAIAN RESPONSIP --- */
+        html {
+            /* Skala font dari 10px di 360px ke 18px di 1920px */
+            /* Ini akan menskalakan semua unit 'rem' (termasuk margin, padding, gap) */
+            font-size: calc(0.8000vw + 10.154px);
+        }
+        @media (max-width: 360px) {
+            html { font-size: 10px; } /* Ukuran minimum */
+        }
+        @media (min-width: 1920px) {
+            html { font-size: 18px; } /* Ukuran maksimum */
+			#cow-btn, #sheep-btn, #horse-btn, #bee-btn, #duck-btn {
+			height: 12rem !important;
+			}
+
+			/* Halaman Ayam */
+			img[onclick="playInfoSound('ayam')"] {
+				height: 9rem !important; 
+			}
+			#egg-nest, #egg-basket {
+				width: 12rem;
+				height: 8rem;
+			}
+			.fa-basket-shopping.md-display-1 {
+				font-size: 7rem !important;
+			}
+
+			/* Kuis 2 Pasangkan */
+			/* Kode ini akan menimpa aturan dari @media (min-width: 1600px) agar ukurannya lebih besar */
+			.puzzle-piece {
+				width: 10rem; 
+				height: 10rem; 
+			}
+			.puzzle-piece img {
+				width: 8rem; 
+				height: 8rem; 
+			}
+        }
+
+        @media (min-width: 3840px) {
+            html { font-size: 32px; } /* Ukuran maksimum untuk 4K */
+        }
+
         body {
             font-family: 'Fredoka', sans-serif;
             background-color: #fef3c7; 
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100vw; /* Gunakan lebar viewport penuh */
+            height: 100vh; /* Gunakan tinggi viewport penuh */
             min-height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* Sesuai permintaan: tidak ada scroll */
             padding: 1rem;
             box-sizing: border-box;
         }
@@ -26,7 +72,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1rem;
+            justify-content: center; /* Pusatkan buku & tombol */
+            gap: 1vh; /* Jarak vertikal berbasis tinggi layar */
+            width: 100%;
+            height: 100%;
         }
         .font-title {
             font-family: 'Fredoka One', cursive;
@@ -34,14 +83,25 @@
         }
         
         .book-container {
-            width: 90vw;
-            max-width: 70%; 
+            width: 95vw; /* Gunakan lebar di layar potret/ponsel */
+            max-width: 1400px; /* Batas lebar maks di desktop besar */
             aspect-ratio: 1200 / 700;
-            height: auto;
+            height: auto; /* Biarkan tinggi dihitung dari rasio aspek */
+            max-height: 90vh; /* Batas tinggi maks agar tombol navigasi muat */
             position: relative;
             transform-style: preserve-3d;
             perspective: 1500px;
         }
+
+        /* Aturan ini berlaku untuk layar lanskap (seperti 1920x1080) */
+        @media (min-aspect-ratio: 1200/700) {
+             .book-container {
+                height: 90vh; /* Gunakan tinggi sebagai batasan */
+                width: auto; /* Biarkan lebar dihitung dari rasio aspek */
+                max-width: 95vw; /* Pastikan tidak melebihi lebar layar */
+             }
+        }
+
         .book {
             width: 50%;
             height: 100%;
@@ -76,13 +136,20 @@
             height: 100%;
             backface-visibility: hidden;
             box-sizing: border-box;
-            padding: 2rem 4rem; 
+            padding: 1rem 1.5rem; /* Padding responsif untuk seluler */
             background-color: #f8fafc; 
             border-radius: 0 24px 24px 0;
             overflow-y: auto;
             overflow-x: hidden;
             color: #1e293b; 
         }
+        /* Padding lebih besar untuk layar desktop */
+        @media (min-width: 1024px) {
+            .page-content {
+                padding: 2rem 4rem;
+            }
+        }
+
         .page-content.back-side {
             transform: rotateY(180deg);
             border-radius: 24px 0 0 24px;
@@ -105,31 +172,61 @@
         .navigation-buttons {
             position: relative;
             display: flex;
-            gap: 15px; 
+            gap: 1rem; /* Diubah dari 15px ke unit 'rem' agar responsif */
             align-items: center; 
             z-index: 1001; 
         }
+
+        /* --- Tombol Navigasi Responsif --- */
         .nav-button {
             background-color: #2563eb; 
             color: white;
             border: none;
             border-radius: 50%;
-            width: 70px; 
-            height: 70px;
-            font-size: 28px;
+            width: 44px; /* Ukuran seluler */
+            height: 44px;
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.1s ease-in-out;
-            box-shadow: 0 6px 0 #1e40af; 
+            box-shadow: 0 4px 0 #1e40af; /* Bayangan seluler */
         }
         .nav-button:active {
-            transform: translateY(4px);
+            transform: translateY(2px); /* Gerakan tekan seluler */
             box-shadow: 0 2px 0 #1e40af;
         }
         .nav-button:hover {
             background-color: #1d4ed8;
+        }
+
+        /* Ukuran lebih besar untuk tablet ke atas */
+        @media (min-width: 768px) {
+            .nav-button {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+                box-shadow: 0 6px 0 #1e40af;
+            }
+            .nav-button:active {
+                transform: translateY(4px);
+                box-shadow: 0 2px 0 #1e40af;
+            }
+        }
+
+        /* Aturan khusus untuk tombol mute yang lebih kecil */
+        #mute-btn {
+            width: 36px;
+            height: 36px;
+            font-size: 16px;
+        }
+        @media (min-width: 768px) {
+            #mute-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
         }
 
         
@@ -138,7 +235,7 @@
             
             align-items: baseline;
             width: 100%; 
-            font-size: 1.25rem;
+            font-size: 1.25rem; /* Ukuran dasar, akan ditimpa di media query */
             cursor: pointer; 
             transition: background-color 0.2s; 
             border-radius: 8px; 
@@ -420,14 +517,14 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 4px;
-            width: 12.25rem; 
+            width: 12.25rem; /* Base size */
             height: 12.25rem;
             padding: 2px;
             background-color: #d1d5db; 
             border-radius: 0.5rem;
         }
         .puzzle-drop-zone {
-            width: 6rem;
+            width: 6rem; /* Base size */
             height: 6rem;
             background-color: #e5e7eb;
             border: 2px dashed #9ca3af;
@@ -452,11 +549,11 @@
             justify-content: center;
             gap: 0.5rem;
             width: 100%;
-            max-width: 15rem; 
-            min-height: 8rem;
+            max-width: 15rem; /* Base size */
+            min-height: 8rem; /* Base size */
         }
         .puzzle-piece-drag {
-            width: 6rem; 
+            width: 6rem; /* Base size */
             height: 6rem; 
             background-color: white;
             border-radius: 0.5rem; 
@@ -510,10 +607,10 @@
                 height: 10rem !important;
             }
             .md-h-150 {
-                height: 150px !important;
+                height: 150px !important; /* Consider using rem here too? 9.375rem */
             }
             .md-h-100 {
-                height: 100px !important;
+                height: 100px !important; /* 6.25rem */
             }
             .md-w-h-20 {
                 width: 5rem !important;
@@ -569,6 +666,82 @@
             background-image: linear-gradient(to top, #ffffff, #e48ce7);
         }		
 
+        /* --- PENYESUAIAN UKURAN GAMBAR UNTUK LAYAR BESAR --- */
+        @media (min-width: 1600px) {
+             /* Perbesar gambar & kontainer kuis */
+            .quiz-option {
+                width: 8rem; 
+                height: 8rem; 
+            }
+            .quiz-option img {
+                width: 6rem; 
+                height: 6rem; 
+            }
+
+            /* Perbesar gambar & kontainer puzzle pasangkan */
+             .puzzle-piece {
+                width: 7rem; 
+                height: 7rem; 
+            }
+            .puzzle-piece img {
+                width: 5rem; 
+                height: 5rem; 
+            }
+
+             /* Perbesar gambar & kontainer kartu memori */
+            .memory-card {
+                width: 6.5rem; 
+                height: 7rem; 
+            }
+             .memory-card .card-front img {
+                width: 5rem; 
+                height: 5rem; 
+            }
+            #memory-grid {
+                 gap: 1rem; /* Sedikit perbesar jarak antar kartu */
+            }
+
+            /* Perbesar gambar hewan di Galeri Suara */
+             .md-w-h-20 { /* Target class for gallery images */
+                width: 7rem !important;
+                height: 7rem !important;
+            }
+
+            /* Perbesar grid & potongan puzzle Kuis 4 */
+            #puzzle-grid-target {
+                width: 16.25rem; 
+                height: 16.25rem;
+            }
+            .puzzle-drop-zone {
+                width: 8rem;
+                height: 8rem;
+            }
+            #puzzle-pieces-source {
+                max-width: 18rem; 
+                min-height: 10rem;
+            }
+             .puzzle-piece-drag {
+                width: 8rem; 
+                height: 8rem; 
+            }
+        }
+
+        /* --- PENYESUAIAN UKURAN FONT TEXT KECIL UNTUK LAYAR BESAR --- */
+        @media (min-width: 1200px) {
+			.fs-5 {
+                /* Perbesar angka di dalam calc() ini */
+                font-size: calc(0.208vw + 1.2rem) !important; 
+            }
+            .fs-6 {
+                 /* Perbesar angka di dalam calc() ini */
+                font-size: calc(0.208vw + 1.1rem) !important;
+            }
+            .daftar-isi-item {
+                 /* Perbesar angka di dalam calc() ini */
+                font-size: calc(0.208vw + 1.2rem) !important;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -611,15 +784,15 @@
                         </div>
 						
                         <div class="mt-4">
-                            <p class="info-list-label">Tujuan Pembelajaran:</p>
-                            <ul class="list-unstyled ps-4 fs-sm fs-md-6 text-secondary space-y-1 mt-1 mb-1" style="list-style-type: disc;">
+                            <p class="fs-6 info-list-label">Tujuan Pembelajaran:</p>
+                            <ul class="fs-5 ps-4 fs-sm fs-md-6 text-secondary space-y-1 mt-1 mb-1" style="list-style-type: disc;">
                                 <li>Mengenal nama-nama hewan ternak.</li>
                                 <li>Memahami ciri hewan ternak.</li>
                             </ul>
                         </div>
 
                         
-                        <div class="fs-sm fs-md-6 text-secondary mt-4 info-list">
+                        <div class="fs-5 fs-sm fs-md-6 text-secondary mt-4 info-list">
                             <span class="info-list-label">Penulis</span>
                             <span class="info-list-value">Ika Nirmala, M.Pd</span>
                             
@@ -637,7 +810,7 @@
                     <div class="page-content back-side d-flex flex-column bg-gradient-bangbin3">
                         <h2 class="fs-2 mb-5 font-title text-center text-primary-emphasis">Petunjuk Penggunaan</h2>
 
-                        <div class="d-flex flex-column align-items-center w-100 gap-4">
+                        <div class="d-flex flex-column align-items: center w-100 gap-4">
                             <div class="space-y-2 text-start">
                                 <div class="d-flex align-items: center gap-4 fs-5 petunjuk-item cursor-pointer rounded-3 p-2" data-sound="petunjuk1">
                                     <i class="fa-solid fa-arrows-left-right text-center fs-3 text-primary" style="width: 2.5rem;"></i>
@@ -645,11 +818,11 @@
                                 </div>
                                 <div class="d-flex align-items: center gap-4 fs-5 petunjuk-item cursor-pointer rounded-3 p-2" data-sound="petunjuk2">
                                     <i class="fa-solid fa-hand-pointer text-center fs-3 text-purple" style="width: 2.5rem;"></i>
-                                    <span>Klik pada hewannya untuk mendengarkan keterangganya yaah!</span>
+                                    <span>Klik pada hewannya untuk mendengarkan keteranganya yaah!</span>
                                 </div>
                                 <div class="d-flex align-items: center gap-4 fs-5 petunjuk-item cursor-pointer rounded-3 p-2" data-sound="petunjuk3">
                                     <i class="fa-solid fa-volume-high text-center fs-3 text-success" style="width: 2.5rem;"></i>
-                                    <span>Pada halaman Suara Hewan, Klik hewannya untuk mendengarkan suara.</span>
+                                    <span>Pada halaman suara hewan, Klik hewannya untuk mendengarkan suara.</span>
                                 </div>
                                  <div class="d-flex align-items: center gap-4 fs-5 petunjuk-item cursor-pointer rounded-3 p-2" data-sound="petunjuk4">
                                     <i class="fa-solid fa-question-circle text-center fs-3 text-danger" style="width: 2.5rem;"></i>
@@ -725,7 +898,7 @@
                     <!-- Belakang Halaman 3 (Sapi) -->
                     <div class="page-content back-side flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
                         <h2 class="display-5 text-success-emphasis font-title">Halo, aku Sapi!</h2>
-                        <div class="d-flex flex-column align-items-center justify-content-center position-relative my-4">
+                        <div class="d-flex flex-column align-items: center justify-content-center position-relative my-4">
                             <div id="milk-interaction" class="position-absolute border border-4 border-secondary-subtle rounded-top-pill rounded-bottom d-none overflow-hidden" style="bottom: -2rem; right: -2.5rem; width: 5rem; height: 7rem; background-color: #e9ecef;">
                                 <div id="milk-fill" class="position-absolute bottom-0 start-0 w-100 bg-white"></div>
                             </div>
@@ -743,7 +916,7 @@
                     <!-- Depan Halaman 4 (Domba) -->
                     <div class="page-content flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
                         <h2 class="display-5 text-info-emphasis font-title">Hai, aku Domba!</h2>
-                        <div class="d-flex flex-column align-items-center justify-content-center position-relative my-4">
+                        <div class="d-flex flex-column align-items: center justify-content-center position-relative my-4">
                             <i id="wool-interaction" class="fa-solid fa-shirt fs-1 text-purple position-absolute opacity-0 transition-all duration-500 d-none" style="top: -2rem; right: -1.25rem;"></i>
                             <img id="sheep-btn" src="image/Domba.png" alt="Domba" class="w-auto cursor-pointer transition-transform hover-scale active-scale-95 shadow-lg md-h-150" style="height: 8rem;">
                         </div>
@@ -756,7 +929,7 @@
                     <div class="page-content back-side flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
                         <h2 class="display-5 text-danger-emphasis font-title">Petok! Aku Ayam!</h2>
                         
-                        <div class="d-flex flex-column align-items-center justify-content-center w-100 my-4">
+                        <div class="d-flex flex-column align-items: center justify-content-center w-100 my-4">
                             <div class="d-flex align-items-end justify-content-center gap-4 w-100">
                                 <div class="d-flex flex-column align-items: center">
                                     <img src="image/Ayam.png" alt="Ayam" class="w-auto shadow-lg mb-2 cursor-pointer md-h-100" style="height: 6rem;" onclick="playInfoSound('ayam')">
@@ -793,7 +966,7 @@
                     <!-- Depan Halaman 5 (Kuda) -->
                     <div class="page-content flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
                         <h2 class="display-5 text-warning-emphasis font-title">Whoosh! Aku Kuda!</h2>
-                        <div class="d-flex flex-column align-items-center justify-content-center position-relative my-4">
+                        <div class="d-flex flex-column align-items: center justify-content-center position-relative my-4">
                             <img id="horse-btn" src="image/Kuda.png" alt="Kuda" class="w-auto cursor-pointer shadow-lg md-h-150" style="height: 8rem;">
                         </div>
                         <p class="fs-4 text-warning-dark text-center">
@@ -803,13 +976,13 @@
                     </div>
                     <!-- Belakang Halaman 5 (Lebah) -->
                     <div class="page-content back-side flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
-                        <h2 class="display-5 text-orange-emphasis font-title">Bzz! Aku Lebah!</h2>
-                        <div class="d-flex flex-column align-items-center justify-content-center position-relative my-4">
+                        <h2 class="display-5 text-orange-emphasis font-title">MMumm! Aku Lebah!</h2>
+                        <div class="d-flex flex-column align-items: center justify-content-center position-relative my-4">
                             <img id="bee-btn" src="image/Lebah.png" alt="Lebah" class="w-auto cursor-pointer shadow-lg md-h-150" style="height: 8rem;">
                         </div>
                         <p class="fs-4 text-orange-dark text-center">
-                            Hal yang paling aku suka adalah membuat... madu! <strong class="fs-3 font-title">BZZZ!</strong>
-                            <span class="d-block fs-5 mt-2">(Klik aku untuk terbang!)</span>
+                            Hal yang paling aku suka adalah membuat... madu! <strong class="fs-3 font-title">Muuummm!</strong>
+                            <span class="d-block fs-5 mt-2">(Klik aku untuk mendengarkan informasi!)</span>
                         </p>
                     </div>
                 </div>
@@ -819,13 +992,13 @@
                     <!-- Depan Halaman 6 (Bebek) -->
                     <div class="page-content flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
                         <h2 class="display-5 text-info-emphasis font-title">Kwek! Aku Bebek!</h2>
-                        <div class="d-flex flex-column align-items-center justify-content-center position-relative my-4">
+                        <div class="d-flex flex-column align-items: center justify-content-center position-relative my-4">
                             <i id="water-splash" class="fa-solid fa-burst display-1 text-primary position-absolute opacity-0 d-none"></i>
                             <img id="duck-btn" src="image/Bebek.png" alt="Bebek" class="w-auto cursor-pointer transition-transform hover-scale active-scale-95 shadow-lg md-h-150" style="height: 8rem;">
                         </div>
                         <p class="fs-4 text-info-dark text-center">
                             Aku jago sekali berenang di kolam! <strong class="fs-3 font-title">KWEK! KWEK!</strong>
-                            <span class="d-block fs-5 mt-2">(Klik aku untuk main air!)</span>
+                            <span class="d-block fs-5 mt-2">(Klik aku untuk mendengarkan informasi!)</span>
                         </p>
                     </div>
                     <!-- Belakang Halaman 6 (Penutup) -->
@@ -849,7 +1022,7 @@
                     <div class="page-content flex-center-col gap-4" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
                         <h2 class="fs-2 md:fs-1 text-purple-emphasis font-title">Kuis 1: Tebak Suara!</h2>
 
-                        <button id="tutor-game-1" class="d-flex align-items-center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer">
+                        <button id="tutor-game-1" class="d-flex align-items: center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer">
                             <i class="fa-solid fa-volume-high fs-4 text-primary"></i>
                             <span>Cara Main</span>
                         </button>
@@ -870,7 +1043,7 @@
                     <div class="page-content back-side flex-center-col gap-3" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
                         <h2 class="fs-2 md:fs-1 text-teal-emphasis font-title">Kuis 2: Pasangkan!</h2>
 
-                        <button id="tutor-game-2" class="d-flex align-items-center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer mb-2">
+                        <button id="tutor-game-2" class="d-flex align-items: center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer mb-2">
                             <i class="fa-solid fa-volume-high fs-4 text-primary"></i>
                             <span>Cara Main</span>
                         </button>
@@ -878,14 +1051,14 @@
                         <p id="puzzle-feedback" class="fs-3 font-title" style="height: 2rem;"></p>
                         <div class="d-flex gap-4 gap-md-5 w-100 justify-content-center align-items-center">
                             <div id="puzzle-animals-container" class="d-flex flex-column gap-3">
-                                <button class="puzzle-piece animal" data-match="cow"><img src="image/Sapi.png" alt="Sapi"></button>
-                                <button class="puzzle-piece animal" data-match="chicken"><img src="image/Ayam.png" alt="Ayam"></button>
-                                <button class="puzzle-piece animal" data-match="horse"><img src="image/Kuda.png" alt="Kuda"></button>
+                                <button class="puzzle-piece animal" data-match="sapi"><img src="image/Sapi.png" alt="Sapi"></button>
+                                <button class="puzzle-piece animal" data-match="ayam"><img src="image/Ayam.png" alt="Ayam"></button>
+                                <button class="puzzle-piece animal" data-match="kuda"><img src="image/Kuda.png" alt="Kuda"></button>
                             </div>
                             <div id="puzzle-shadows-container" class="d-flex flex-column gap-3">
-                                <button class="puzzle-piece puzzle-shadow" data-match="horse"><img src="image/Kuda.png" alt="Bayangan Kuda"></button>
-                                <button class="puzzle-piece puzzle-shadow" data-match="cow"><img src="image/Sapi.png" alt="Bayangan Sapi"></button>
-                                <button class="puzzle-piece puzzle-shadow" data-match="chicken"><img src="image/Ayam.png" alt="Bayangan Ayam"></button>
+                                <button class="puzzle-piece puzzle-shadow" data-match="kuda"><img src="image/Kuda.png" alt="Bayangan Kuda"></button>
+                                <button class="puzzle-piece puzzle-shadow" data-match="sapi"><img src="image/Sapi.png" alt="Bayangan Sapi"></button>
+                                <button class="puzzle-piece puzzle-shadow" data-match="ayam"><img src="image/Ayam.png" alt="Bayangan Ayam"></button>
                             </div>
                         </div>
                         <button id="reset-puzzle-btn" class="quiz-btn bg-teal-500 shadow-teal-700 d-none mt-4">
@@ -900,7 +1073,7 @@
                     <div class="page-content flex-center-col gap-3" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
                         <h2 class="fs-2 md:fs-1 text-indigo-emphasis font-title">Kuis 3: Ingat Aku!</h2>
 
-                        <button id="tutor-game-3" class="d-flex align-items-center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer mb-2">
+                        <button id="tutor-game-3" class="d-flex align-items: center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer mb-2">
                             <i class="fa-solid fa-volume-high fs-4 text-primary"></i>
                             <span>Cara Main</span>
                         </button>
@@ -920,7 +1093,7 @@
                         <h2 class="fs-2 md:fs-1 text-orange-emphasis font-title">Kuis 4: Susun Puzzle!</h2>
                         
                         <!-- BARU: Tombol Cara Main Kuis 4 -->
-                        <button id="tutor-game-4" class="d-flex align-items-center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer mb-2">
+                        <button id="tutor-game-4" class="d-flex align-items: center gap-2 fs-5 fw-medium text-secondary-emphasis hover-text-primary text-decoration-none border-0 bg-transparent cursor-pointer mb-2">
                             <i class="fa-solid fa-volume-high fs-4 text-primary"></i>
                             <span>Cara Main</span>
                         </button>
@@ -946,8 +1119,8 @@
                     <!-- Depan Halaman 9 (Daftar Pustaka) -->
                     <div class="page-content flex-center-col gap-3" style="background-image: url('image/bg2.png'); background-size: cover; background-position: center;">
 
-						<h2 class="fs-2 md:fs-2 text-primary-emphasis mb-5 font-title">Daftar Pustaka</h2>                        
-							<ul class="list-unstyled text-start fs-sm fs-md-6 space-y-3 ps-4" style="list-style-type: disc; list-style-position: outside;">
+						<h2 class="fs-6 md:fs-6 text-primary-emphasis mb-5 font-title" style="max-width: 24rem;">Daftar Pustaka</h2>                        
+							<ul class="fs-4 text-start fs-sm fs-md-6 space-y-3 ps-4" style="list-style-type: disc; list-style-position: outside;">
 								<li>Nirmala, Ika. (2025). *Konsep Buku Cerita Interaktif PAUD*. Jakarta.</li>
 								<li>Font Awesome. (2025). *Ikon Vektor*. Diakses dari https://fontawesome.com</li>
 								<li>Bootstrap. (2025). *CSS Framework*. Diakses dari https://getbootstrap.com</li>
@@ -1012,7 +1185,8 @@
             <button id="prev-btn" class="nav-button">
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <button id="mute-btn" class="nav-button bg-orange-500 shadow-orange-700" style="width: 50px; height: 50px; font-size: 20px; box-shadow: 0 6px 0 #c2410c;">
+            <!-- PERUBAHAN: Menghapus inline style 'style' dari tombol mute -->
+            <button id="mute-btn" class="nav-button bg-orange-500 shadow-orange-700">
                 <i class="fas fa-volume-high"></i>
             </button>
             <button id="next-btn" class="nav-button">
@@ -1054,7 +1228,966 @@
 
 
     <script>
-	const _0x462f47=_0x38de;(function(_0x5204d9,_0x5763fe){const _0x8d1988=_0x38de,_0x5b63b2=_0x5204d9();while(!![]){try{const _0x30b273=parseInt(_0x8d1988(0x12d))/0x1*(-parseInt(_0x8d1988(0x125))/0x2)+parseInt(_0x8d1988(0x1af))/0x3+parseInt(_0x8d1988(0x1c5))/0x4*(parseInt(_0x8d1988(0x194))/0x5)+-parseInt(_0x8d1988(0x11a))/0x6+parseInt(_0x8d1988(0x16e))/0x7*(parseInt(_0x8d1988(0x150))/0x8)+parseInt(_0x8d1988(0x1d7))/0x9+-parseInt(_0x8d1988(0x119))/0xa*(parseInt(_0x8d1988(0x16b))/0xb);if(_0x30b273===_0x5763fe)break;else _0x5b63b2['push'](_0x5b63b2['shift']());}catch(_0x1dbd3c){_0x5b63b2['push'](_0x5b63b2['shift']());}}}(_0x5bde,0x1cf41));const soundMap={'moo':document[_0x462f47(0x14b)](_0x462f47(0x12b)),'baa':document['getElementById'](_0x462f47(0x1c3)),'cluck':document['getElementById']('sound-ayam'),'neigh':document[_0x462f47(0x14b)](_0x462f47(0x1d5)),'buzz':document[_0x462f47(0x14b)](_0x462f47(0x144)),'quack':document['getElementById'](_0x462f47(0x16a))},infoSoundMap={'sapi':document[_0x462f47(0x14b)](_0x462f47(0x183)),'domba':document[_0x462f47(0x14b)](_0x462f47(0x1d9)),'ayam':document['getElementById']('info-ayam'),'kuda':document[_0x462f47(0x14b)](_0x462f47(0x158)),'lebah':document[_0x462f47(0x14b)](_0x462f47(0x199)),'bebek':document[_0x462f47(0x14b)]('info-bebek')},petunjukSoundMap={'petunjuk1':document[_0x462f47(0x14b)](_0x462f47(0x15e)),'petunjuk2':document['getElementById'](_0x462f47(0x13a)),'petunjuk3':document[_0x462f47(0x14b)](_0x462f47(0x174)),'petunjuk4':document[_0x462f47(0x14b)](_0x462f47(0x197))},tutorSoundMap={'tutor1':document[_0x462f47(0x14b)](_0x462f47(0x152)),'tutor2':document[_0x462f47(0x14b)](_0x462f47(0x1ba)),'tutor3':document['getElementById'](_0x462f47(0x180)),'tutor4':document[_0x462f47(0x14b)](_0x462f47(0x11f))},animalImageMap={'sapi':'image/Sapi.png','domba':_0x462f47(0x1a1),'ayam':_0x462f47(0x145),'kuda':_0x462f47(0x1dd),'lebah':_0x462f47(0x130),'bebek':_0x462f47(0x182)},soundQuizMap={'moo':_0x462f47(0x170),'baa':_0x462f47(0x133),'cluck':'ayam','neigh':_0x462f47(0x1c6),'buzz':_0x462f47(0x179),'quack':_0x462f47(0x151)};let soundClick,soundWrong,soundFlip,soundBgm,soundMenang;function stopAllSounds(_0x91fb3=null){const _0x3621ea=_0x462f47,_0x43b866=[...Object[_0x3621ea(0x1a8)](soundMap),...Object[_0x3621ea(0x1a8)](infoSoundMap),...Object[_0x3621ea(0x1a8)](petunjukSoundMap),...Object[_0x3621ea(0x1a8)](tutorSoundMap),soundClick,soundWrong,soundFlip,soundMenang];_0x43b866[_0x3621ea(0x10f)](_0x3a6c90=>{const _0x21ab36=_0x3621ea;_0x3a6c90&&_0x3a6c90!==_0x91fb3&&(_0x3a6c90['pause'](),_0x3a6c90[_0x21ab36(0x1b3)]=0x0);});}function playSound(_0x195fa6){const _0x47c6b5=_0x462f47;stopAllSounds();let _0x48f2aa;if(soundMap[_0x195fa6])_0x48f2aa=soundMap[_0x195fa6];else{const _0x340221=Object[_0x47c6b5(0x1ce)](soundQuizMap)[_0x47c6b5(0x1c8)](_0xfb0a55=>soundQuizMap[_0xfb0a55]===_0x195fa6);_0x340221&&soundMap[_0x340221]&&(_0x48f2aa=soundMap[_0x340221]);}_0x48f2aa&&_0x48f2aa[_0x47c6b5(0x1c1)]()[_0x47c6b5(0x18c)](_0x3119ea=>{const _0x583587=_0x47c6b5;_0x3119ea[_0x583587(0x1a3)]!=='NotAllowedError'&&console[_0x583587(0x1a4)](_0x583587(0x1c2),_0x3119ea);});}function playInfoSound(_0x4ea2d8){const _0x498072=_0x462f47;stopAllSounds();const _0x47cfc8={'sapi':document[_0x498072(0x14b)](_0x498072(0x183)),'domba':document[_0x498072(0x14b)](_0x498072(0x1d9)),'ayam':document[_0x498072(0x14b)]('info-ayam'),'kuda':document[_0x498072(0x14b)](_0x498072(0x158)),'lebah':document['getElementById'](_0x498072(0x199)),'bebek':document[_0x498072(0x14b)](_0x498072(0x161))},_0x591ad4=_0x47cfc8[_0x4ea2d8];_0x591ad4&&_0x591ad4[_0x498072(0x1c1)]()['catch'](_0x1bea09=>{const _0x368a73=_0x498072;_0x1bea09[_0x368a73(0x1a3)]!==_0x368a73(0x1aa)&&console[_0x368a73(0x1a4)](_0x368a73(0x147),_0x1bea09);});}function _0x38de(_0x2eb9a2,_0x42cce0){const _0x5bde74=_0x5bde();return _0x38de=function(_0x38debd,_0x474108){_0x38debd=_0x38debd-0x10f;let _0x1b1d54=_0x5bde74[_0x38debd];return _0x1b1d54;},_0x38de(_0x2eb9a2,_0x42cce0);}function playPetunjukSound(_0x675efd){const _0x31b4e8=_0x462f47;stopAllSounds();const _0x1af4e0=petunjukSoundMap[_0x675efd];_0x1af4e0&&_0x1af4e0[_0x31b4e8(0x1c1)]()[_0x31b4e8(0x18c)](_0x3bcce4=>{const _0x2f6d97=_0x31b4e8;_0x3bcce4[_0x2f6d97(0x1a3)]!=='NotAllowedError'&&console['error'](_0x2f6d97(0x1a0),_0x3bcce4);});}function playTutorSound(_0xde0bc9){const _0x255091=_0x462f47;stopAllSounds();const _0x34b4f5=tutorSoundMap[_0xde0bc9];_0x34b4f5&&_0x34b4f5[_0x255091(0x1c1)]()[_0x255091(0x18c)](_0x536e92=>{const _0x1a3d76=_0x255091;_0x536e92[_0x1a3d76(0x1a3)]!==_0x1a3d76(0x1aa)&&console[_0x1a3d76(0x1a4)](_0x1a3d76(0x15b),_0x536e92);});}function playClickSound(){const _0x23740f=_0x462f47;soundClick&&(soundClick[_0x23740f(0x1b3)]=0x0,soundClick[_0x23740f(0x1c1)]()[_0x23740f(0x18c)](_0x4ba52c=>{}));}function _0x5bde(){const _0x598da5=['info-lebah','fa-question','.puzzle-piece.puzzle-shadow','dragover','offsetWidth','click','hasChildNodes','Gagal\x20memutar\x20audio\x20petunjuk:','image/Domba.png','.puzzle-piece.animal','name','error','.card-back\x20i','puzzle-pieces-source','add','values','neigh','NotAllowedError','[data-match=\x22horse\x22]','url(','0%\x20100%','animal','416589HyyIGt','none','target','disabled','currentTime','fa-volume-high','reset-memory-btn','dataset','next-quiz-btn','appendChild','backgroundPosition','sound-tutor2','\x22\x20alt=\x22','fs-3\x20font-title\x20text-danger','milk-fill-anim','border','bee-btn','BGM\x20play\x20failed,\x20user\x20interaction\x20needed.','play','Gagal\x20memutar\x20audio:','sound-domba','tutor-game-3','12BTjoaO','kuda','querySelectorAll','find','sound-menang','flipped','fa-volume-mute','quiz-options-container','horse-run-anim','keys','muted','horse-btn','duck-btn','random','remove','puzzle-shadows-container','sound-kuda','placed','158202rjmrnK','zIndex','info-domba','sort','prev','preventDefault','image/Kuda.png','forEach','Coba\x20Lagi\x20Nanti!','className','sound-wrong','textContent','.puzzle-piece','.egg-draggable','drag-over','opacity','next-btn','10QCBHZq','521292XTNnrl','Permainan\x20Selesai,\x20Kamu\x20Hebat!','memory-grid','translateY(0)\x20rotate(0deg)','answer','sound-tutor4','match','[data-match=\x22chicken\x22]','play-quiz-sound-btn','tutor4','addEventListener','2JWRmIz','floor','targetPage','removeEventListener','tutor-game-1','Benar!','sound-sapi','dragend','76913hjPHhX','createElement','sound-click','image/Lebah.png','next','button','domba','.daftar-isi-item','dataTransfer','parentElement','quiz-feedback','egg1','transform','sound-petunjuk2','selected','100%\x200%','egg2','d-none','classList','draggable','matched','moo','ayam','sound-lebah','image/Ayam.png','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22card-face\x20card-front\x22><img\x20src=\x22','Gagal\x20memutar\x20audio\x20info:','dragleave','[data-match=\x22cow\x22]','innerHTML','getElementById','buzz','fa-check','[id^=\x22tutor-game-\x22]','puzzle-4-feedback','87352DKszmq','bebek','sound-tutor1','reset-puzzle-btn','touchend','milk-fill','memory-card','pos','info-kuda','getData','body','Gagal\x20memutar\x20audio\x20tutorial:','wrong','onclick','sound-petunjuk1','contains','push','info-bebek','drop','Bukan\x20disitu!','setData','sound','\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22card-face\x20card-back\x22><i\x20class=\x22fa-solid\x20fa-question\x22></i></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','dragging','style','<img\x20src=\x22','sound-bebek','312763GXcdhy','tutor-game-2','dragstart','42rjWQHJ','Bukan!','sapi','.puzzle-piece-drag','.quiz-option','div','sound-petunjuk3','egg3','children','puzzle-feedback','fs-3\x20font-title\x20text-success','lebah','cluck','wool-interaction','text/plain','Cocok!','Ulangi\x20Kuis\x20Suara','Hebat,\x20Selesai!','sound-tutor3','sound-flip','image/Bebek.png','info-sapi','egg-feedback','.petunjuk-item','querySelector','[draggable=\x22true\x22]','reset-puzzle-4-btn','options','tutor-game-4','from','catch','closest','log','BGM\x20auto-play\x20failed,\x20waiting\x20for\x20interaction.','puzzle-grid-target','tutor1','bee-fly-anim','water-splash','148110GqzaWl','backgroundImage','sound-bgm','sound-petunjuk4','length'];_0x5bde=function(){return _0x598da5;};return _0x5bde();}function playWrongSound(){const _0xca4c75=_0x462f47;soundWrong&&(soundWrong[_0xca4c75(0x1b3)]=0x0,soundWrong[_0xca4c75(0x1c1)]()['catch'](_0x8fb7f=>{}));}function playFlipSound(){const _0x4c4ce6=_0x462f47;soundFlip&&(soundFlip[_0x4c4ce6(0x1b3)]=0x0,soundFlip['play']()[_0x4c4ce6(0x18c)](_0x57c8f2=>{}));}function playWinSound(){const _0x5caa29=_0x462f47;soundMenang&&(stopAllSounds(),soundMenang[_0x5caa29(0x1b3)]=0x0,soundMenang[_0x5caa29(0x1c1)]()[_0x5caa29(0x18c)](_0x13e1f8=>{}));}document[_0x462f47(0x124)]('DOMContentLoaded',()=>{const _0x196d88=_0x462f47;soundClick=document['getElementById'](_0x196d88(0x12f)),soundWrong=document[_0x196d88(0x14b)](_0x196d88(0x112)),soundFlip=document[_0x196d88(0x14b)](_0x196d88(0x181)),soundBgm=document['getElementById'](_0x196d88(0x196)),soundMenang=document[_0x196d88(0x14b)](_0x196d88(0x1c9));const _0x12c647=document[_0x196d88(0x14b)]('mute-btn'),_0xace53e=_0x12c647[_0x196d88(0x186)]('i');let _0x275078=![];soundBgm&&(soundBgm['volume']=0.3);_0x12c647[_0x196d88(0x124)](_0x196d88(0x19e),()=>{const _0x8c65dd=_0x196d88;_0x275078=!_0x275078;soundBgm&&(soundBgm[_0x8c65dd(0x1cf)]=_0x275078);if(_0x275078){_0xace53e[_0x8c65dd(0x13f)]['remove'](_0x8c65dd(0x1b4)),_0xace53e[_0x8c65dd(0x13f)][_0x8c65dd(0x1a7)](_0x8c65dd(0x1cb));if(soundBgm)soundBgm['pause']();}else _0xace53e['classList'][_0x8c65dd(0x1d3)](_0x8c65dd(0x1cb)),_0xace53e['classList'][_0x8c65dd(0x1a7)](_0x8c65dd(0x1b4)),soundBgm&&soundBgm['play']()[_0x8c65dd(0x18c)](_0x5d2c31=>console[_0x8c65dd(0x18e)](_0x8c65dd(0x1c0)));});function _0x3b7fc7(){const _0x425dbe=_0x196d88;!_0x275078&&soundBgm&&soundBgm['play']()['catch'](_0x86a9c3=>console[_0x425dbe(0x18e)](_0x425dbe(0x18f))),document[_0x425dbe(0x15a)][_0x425dbe(0x128)](_0x425dbe(0x19e),_0x3b7fc7),document[_0x425dbe(0x15a)][_0x425dbe(0x128)]('touchend',_0x3b7fc7);}document[_0x196d88(0x15a)]['addEventListener'](_0x196d88(0x19e),_0x3b7fc7),document[_0x196d88(0x15a)][_0x196d88(0x124)](_0x196d88(0x154),_0x3b7fc7);const _0x16972a=document[_0x196d88(0x1c7)]('.page'),_0x173b58=document['getElementById']('prev-btn'),_0x150ad5=document[_0x196d88(0x14b)](_0x196d88(0x118));let _0x36477c=0x0,_0x270061=![];const _0x1d01f7=_0x16972a[_0x196d88(0x198)];function _0xb4ff4a(){const _0x813076=_0x196d88;_0x16972a[_0x813076(0x10f)]((_0x3d0f0d,_0x108a6f)=>{const _0x5da47f=_0x813076;_0x108a6f<_0x36477c?_0x3d0f0d[_0x5da47f(0x168)][_0x5da47f(0x1d8)]=_0x108a6f+0x1:_0x3d0f0d[_0x5da47f(0x168)][_0x5da47f(0x1d8)]=_0x1d01f7-_0x108a6f;});}function _0x2d3cc9(_0x2275e4){const _0x449192=_0x196d88;if(_0x270061)return;stopAllSounds(),playFlipSound();if(_0x2275e4==='next'){if(_0x36477c>=_0x1d01f7)return;_0x270061=!![];const _0x5c6846=_0x16972a[_0x36477c];_0x5c6846[_0x449192(0x168)][_0x449192(0x1d8)]=_0x1d01f7+0x1,_0x5c6846[_0x449192(0x13f)][_0x449192(0x1a7)](_0x449192(0x1ca)),_0x36477c++;}else{if(_0x2275e4===_0x449192(0x1db)){if(_0x36477c<=0x0)return;_0x270061=!![],_0x36477c--;const _0x3534bf=_0x16972a[_0x36477c];_0x3534bf['style']['zIndex']=_0x1d01f7+0x1,_0x3534bf[_0x449192(0x13f)][_0x449192(0x1d3)](_0x449192(0x1ca));}}setTimeout(()=>{_0x270061=![],_0xb4ff4a();},0x320);}function _0xc52881(_0x3fb7aa){const _0x266f10=_0x196d88;if(_0x270061)return;if(_0x3fb7aa===_0x36477c)return;stopAllSounds(),playClickSound();if(_0x3fb7aa===_0x36477c+0x1)_0x2d3cc9(_0x266f10(0x131));else _0x3fb7aa===_0x36477c-0x1?_0x2d3cc9(_0x266f10(0x1db)):(_0x270061=!![],_0x16972a[_0x266f10(0x10f)]((_0x165ca6,_0x5140ee)=>{const _0x472ce4=_0x266f10;_0x5140ee<_0x3fb7aa?_0x165ca6['classList'][_0x472ce4(0x1a7)](_0x472ce4(0x1ca)):_0x165ca6[_0x472ce4(0x13f)]['remove']('flipped');}),_0x36477c=_0x3fb7aa,setTimeout(()=>{_0x270061=![],_0xb4ff4a();},0x12c));}_0x173b58[_0x196d88(0x124)](_0x196d88(0x19e),()=>{const _0x11b90b=_0x196d88;playClickSound(),_0x2d3cc9(_0x11b90b(0x1db));}),_0x150ad5[_0x196d88(0x124)]('click',()=>{const _0x43f883=_0x196d88;playClickSound(),_0x2d3cc9(_0x43f883(0x131));}),_0x16972a['forEach']((_0x3447aa,_0x5bd64d)=>{_0x3447aa['addEventListener']('click',_0x9ee42b=>{const _0x556976=_0x38de;if(_0x9ee42b[_0x556976(0x1b1)]['closest'](_0x556976(0x132))||_0x9ee42b['target']['closest']('img[id$=\x22-btn\x22]')||_0x9ee42b['target'][_0x556976(0x18d)]('img[onclick]')||_0x9ee42b['target'][_0x556976(0x18d)]('a')||_0x9ee42b[_0x556976(0x1b1)][_0x556976(0x18d)](_0x556976(0x187))||_0x9ee42b[_0x556976(0x1b1)][_0x556976(0x18d)]('.memory-card')||_0x9ee42b[_0x556976(0x1b1)][_0x556976(0x18d)](_0x556976(0x171))||_0x9ee42b[_0x556976(0x1b1)][_0x556976(0x18d)]('.petunjuk-item')||_0x9ee42b['target'][_0x556976(0x18d)](_0x556976(0x14e))||_0x9ee42b['target'][_0x556976(0x18d)](_0x556976(0x134)))return;const _0x20694d=_0x3447aa[_0x556976(0x13f)][_0x556976(0x15f)](_0x556976(0x1ca));if(_0x20694d&&_0x5bd64d===_0x36477c-0x1)_0x2d3cc9(_0x556976(0x1db));else!_0x20694d&&_0x5bd64d===_0x36477c&&_0x2d3cc9(_0x556976(0x131));});}),_0xb4ff4a(),document['querySelectorAll'](_0x196d88(0x134))['forEach'](_0x2dd29b=>{const _0x526561=_0x196d88;_0x2dd29b[_0x526561(0x124)]('click',_0x18b730=>{const _0x5ed462=_0x526561,_0x5bc314=_0x18b730['currentTarget'][_0x5ed462(0x1b6)][_0x5ed462(0x127)];if(_0x5bc314){const _0x128225=parseInt(_0x5bc314,0xa);_0xc52881(_0x128225);}});}),document['querySelectorAll'](_0x196d88(0x185))['forEach'](_0x2b1009=>{const _0x318e24=_0x196d88;_0x2b1009[_0x318e24(0x124)]('click',()=>{const _0x56e6ed=_0x318e24;playClickSound();const _0xe84382=_0x2b1009[_0x56e6ed(0x1b6)][_0x56e6ed(0x165)];_0xe84382&&playPetunjukSound(_0xe84382);});}),document['getElementById']('cow-btn')[_0x196d88(0x124)](_0x196d88(0x19e),()=>{const _0x5b791c=_0x196d88;playClickSound(),playInfoSound('sapi');const _0x93cd52=document[_0x5b791c(0x14b)]('milk-interaction'),_0x1aa48c=document[_0x5b791c(0x14b)](_0x5b791c(0x155));_0x93cd52[_0x5b791c(0x13f)]['remove'](_0x5b791c(0x13e)),_0x1aa48c[_0x5b791c(0x13f)]['remove'](_0x5b791c(0x1bd)),void _0x1aa48c[_0x5b791c(0x19d)],_0x1aa48c[_0x5b791c(0x13f)][_0x5b791c(0x1a7)](_0x5b791c(0x1bd));}),document['getElementById']('sheep-btn')[_0x196d88(0x124)](_0x196d88(0x19e),()=>{const _0x1b16a5=_0x196d88;playClickSound(),playInfoSound(_0x1b16a5(0x133));const _0x444b90=document[_0x1b16a5(0x14b)](_0x1b16a5(0x17b));_0x444b90['classList']['remove'](_0x1b16a5(0x13e)),_0x444b90[_0x1b16a5(0x168)][_0x1b16a5(0x117)]='1',_0x444b90[_0x1b16a5(0x168)]['transform']='translateY(-20px)\x20rotate(-15deg)',setTimeout(()=>{const _0x5615a2=_0x1b16a5;_0x444b90['style'][_0x5615a2(0x117)]='0',_0x444b90[_0x5615a2(0x168)][_0x5615a2(0x139)]=_0x5615a2(0x11d),setTimeout(()=>_0x444b90['classList'][_0x5615a2(0x1a7)](_0x5615a2(0x13e)),0x1f4);},0x5dc);});const _0x1289b7=document[_0x196d88(0x1c7)](_0x196d88(0x115)),_0x3ae7b5=document[_0x196d88(0x14b)]('egg-basket'),_0xa5b371=document[_0x196d88(0x14b)]('egg-nest'),_0x16cb48=document[_0x196d88(0x14b)](_0x196d88(0x184));let _0x2a8b60=0x0;const _0x489a1c=0x3;function _0x119aed(){const _0x1d6a74=_0x196d88;if(!_0x3ae7b5||!_0xa5b371)return;_0x3ae7b5['innerHTML']='';if(_0x16cb48)_0x16cb48[_0x1d6a74(0x113)]='';_0x2a8b60=0x0;const _0x479285=[_0x1d6a74(0x138),_0x1d6a74(0x13d),_0x1d6a74(0x175)];_0x479285[_0x1d6a74(0x10f)](_0x350f4a=>{const _0x177013=_0x1d6a74,_0x5d0294=document[_0x177013(0x14b)](_0x350f4a);_0x5d0294&&(_0x5d0294[_0x177013(0x140)]=!![],_0x5d0294[_0x177013(0x13f)][_0x177013(0x1d3)](_0x177013(0x1d6),_0x177013(0x167)),_0x5d0294[_0x177013(0x136)]!==_0xa5b371&&_0xa5b371['appendChild'](_0x5d0294));});}_0x1289b7['forEach'](_0x509116=>{const _0x47a78a=_0x196d88;_0x509116[_0x47a78a(0x124)](_0x47a78a(0x16d),_0x37615a=>{const _0x44ff14=_0x47a78a;playSound(_0x44ff14(0x17a)),_0x37615a[_0x44ff14(0x135)]['setData'](_0x44ff14(0x17c),_0x37615a[_0x44ff14(0x1b1)]['id']),_0x509116['classList']['add'](_0x44ff14(0x167));if(_0x16cb48)_0x16cb48[_0x44ff14(0x113)]='';}),_0x509116['addEventListener']('dragend',()=>{const _0x5ef9d4=_0x47a78a;_0x509116[_0x5ef9d4(0x13f)][_0x5ef9d4(0x1d3)](_0x5ef9d4(0x167));});});_0x3ae7b5&&(_0x3ae7b5[_0x196d88(0x124)](_0x196d88(0x19c),_0x48825c=>{const _0x4948c0=_0x196d88;_0x48825c[_0x4948c0(0x1dc)](),_0x3ae7b5[_0x4948c0(0x13f)][_0x4948c0(0x1a7)](_0x4948c0(0x116));}),_0x3ae7b5[_0x196d88(0x124)](_0x196d88(0x148),()=>{const _0x45f541=_0x196d88;_0x3ae7b5['classList'][_0x45f541(0x1d3)]('drag-over');}),_0x3ae7b5[_0x196d88(0x124)](_0x196d88(0x162),_0x102567=>{const _0x317bb7=_0x196d88;_0x102567[_0x317bb7(0x1dc)](),_0x3ae7b5[_0x317bb7(0x13f)][_0x317bb7(0x1d3)](_0x317bb7(0x116));const _0x4cf732=_0x102567[_0x317bb7(0x135)][_0x317bb7(0x159)](_0x317bb7(0x17c)),_0x1773fa=document[_0x317bb7(0x14b)](_0x4cf732);if(_0x1773fa&&!_0x1773fa[_0x317bb7(0x13f)][_0x317bb7(0x15f)](_0x317bb7(0x1d6))){playClickSound(),_0x3ae7b5[_0x317bb7(0x1b8)](_0x1773fa),_0x1773fa['draggable']=![],_0x1773fa[_0x317bb7(0x13f)][_0x317bb7(0x1a7)](_0x317bb7(0x1d6)),_0x2a8b60++;if(_0x2a8b60===_0x489a1c){if(_0x16cb48)_0x16cb48['textContent']='Hebat!\x20Semua\x20telur\x20aman!';setTimeout(_0x119aed,0xbb8);}}}));document[_0x196d88(0x14b)](_0x196d88(0x1d0))[_0x196d88(0x124)]('click',_0x5a5780=>{const _0x105148=_0x196d88;playClickSound(),playInfoSound(_0x105148(0x1c6));const _0x4ab84e=_0x5a5780['currentTarget'];_0x4ab84e['classList'][_0x105148(0x1a7)](_0x105148(0x1cd)),setTimeout(()=>_0x4ab84e[_0x105148(0x13f)][_0x105148(0x1d3)](_0x105148(0x1cd)),0x3e8);}),document[_0x196d88(0x14b)](_0x196d88(0x1bf))[_0x196d88(0x124)]('click',_0xaa3688=>{const _0x3a10fe=_0x196d88;playClickSound(),playInfoSound(_0x3a10fe(0x179));const _0x55b787=_0xaa3688['currentTarget'];_0x55b787[_0x3a10fe(0x13f)][_0x3a10fe(0x1a7)]('bee-fly-anim'),setTimeout(()=>_0x55b787[_0x3a10fe(0x13f)][_0x3a10fe(0x1d3)](_0x3a10fe(0x192)),0x1f4);}),document[_0x196d88(0x14b)](_0x196d88(0x1d1))[_0x196d88(0x124)](_0x196d88(0x19e),()=>{const _0x25fe84=_0x196d88;playClickSound(),playInfoSound(_0x25fe84(0x151));const _0x17eb16=document[_0x25fe84(0x14b)](_0x25fe84(0x193));_0x17eb16['classList'][_0x25fe84(0x1d3)]('d-none'),_0x17eb16[_0x25fe84(0x13f)]['add'](_0x25fe84(0x192)),setTimeout(()=>{const _0x117f87=_0x25fe84;_0x17eb16[_0x117f87(0x13f)][_0x117f87(0x1a7)](_0x117f87(0x13e)),_0x17eb16[_0x117f87(0x13f)]['remove'](_0x117f87(0x192));},0x1f4);}),document['getElementById'](_0x196d88(0x129))?.[_0x196d88(0x124)]('click',()=>{const _0x753894=_0x196d88;playClickSound(),playTutorSound(_0x753894(0x191));}),document[_0x196d88(0x14b)](_0x196d88(0x16c))?.['addEventListener']('click',()=>{playClickSound(),playTutorSound('tutor2');}),document['getElementById'](_0x196d88(0x1c4))?.[_0x196d88(0x124)](_0x196d88(0x19e),()=>{playClickSound(),playTutorSound('tutor3');}),document[_0x196d88(0x14b)](_0x196d88(0x18a))?.[_0x196d88(0x124)]('click',()=>{const _0x13ce29=_0x196d88;playClickSound(),playTutorSound(_0x13ce29(0x123));});const _0x5f33c6=[{'sound':_0x196d88(0x142),'options':[_0x196d88(0x170),'domba','ayam'],'answer':_0x196d88(0x170)},{'sound':_0x196d88(0x17a),'options':[_0x196d88(0x1c6),_0x196d88(0x143),_0x196d88(0x151)],'answer':_0x196d88(0x143)},{'sound':_0x196d88(0x1a9),'options':['lebah','kuda',_0x196d88(0x170)],'answer':_0x196d88(0x1c6)},{'sound':_0x196d88(0x14c),'options':['domba',_0x196d88(0x151),_0x196d88(0x179)],'answer':_0x196d88(0x179)}];let _0xd6b52e=0x0,_0xa1706a=!![];const _0xfdaad0=document['getElementById'](_0x196d88(0x122)),_0x4f9111=document[_0x196d88(0x14b)](_0x196d88(0x1cc)),_0x53d189=document['getElementById'](_0x196d88(0x137)),_0x30a040=document[_0x196d88(0x14b)](_0x196d88(0x1b7));function _0x576bf8(_0x37b0fd){const _0x45cb09=_0x196d88;if(!_0x53d189)return;if(_0x37b0fd>=_0x5f33c6['length']){_0x53d189[_0x45cb09(0x113)]=_0x45cb09(0x11b),_0x53d189['className']=_0x45cb09(0x178),_0xfdaad0['classList'][_0x45cb09(0x1a7)](_0x45cb09(0x13e)),_0x4f9111['classList']['add'](_0x45cb09(0x13e)),_0x30a040[_0x45cb09(0x113)]='Ulangi\x20Kuis\x20Suara',_0x30a040[_0x45cb09(0x13f)][_0x45cb09(0x1d3)](_0x45cb09(0x13e)),_0xa1706a=![],playWinSound();return;}_0xa1706a=!![];const _0x27af56=_0x5f33c6[_0x37b0fd];_0xfdaad0['classList'][_0x45cb09(0x1d3)](_0x45cb09(0x13e)),_0x4f9111[_0x45cb09(0x13f)][_0x45cb09(0x1d3)](_0x45cb09(0x13e)),_0x53d189['textContent']='',_0x30a040[_0x45cb09(0x13f)][_0x45cb09(0x1a7)](_0x45cb09(0x13e)),_0x30a040[_0x45cb09(0x113)]='Soal\x20Berikutnya',_0xfdaad0[_0x45cb09(0x15d)]=()=>{playClickSound(),playSound(_0x27af56['sound']);},_0x4f9111[_0x45cb09(0x14a)]='',_0x27af56[_0x45cb09(0x189)]['forEach']((_0x50cf45,_0x4745a9)=>{const _0x20bf03=_0x45cb09,_0x3db0f9=document[_0x20bf03(0x12e)]('button');_0x3db0f9['className']='quiz-option',_0x3db0f9[_0x20bf03(0x1b6)][_0x20bf03(0x1ae)]=_0x50cf45;const _0x51faac=animalImageMap[_0x50cf45];_0x3db0f9[_0x20bf03(0x14a)]=_0x20bf03(0x169)+_0x51faac+_0x20bf03(0x1bb)+_0x50cf45+'\x22>',_0x3db0f9[_0x20bf03(0x15d)]=()=>{const _0x58ea3e=_0x20bf03;playClickSound(),_0x18c08b(_0x50cf45,_0x27af56[_0x58ea3e(0x11e)],_0x3db0f9);},_0x4f9111[_0x20bf03(0x1b8)](_0x3db0f9);});}function _0x18c08b(_0x4c4fb1,_0xc51fbe,_0x1ebbbf){const _0x58674b=_0x196d88;if(!_0xa1706a)return;_0xa1706a=![];const _0x548eed=_0x4f9111['querySelectorAll'](_0x58674b(0x172));_0x548eed[_0x58674b(0x10f)](_0x3e3926=>{const _0x2f5597=_0x58674b;_0x3e3926['disabled']=!![],_0x3e3926[_0x2f5597(0x1b6)]['animal']===_0xc51fbe&&_0x3e3926['classList'][_0x2f5597(0x1a7)]('correct');}),_0x4c4fb1===_0xc51fbe?(_0x53d189['textContent']=_0x58674b(0x12a),_0x53d189['className']=_0x58674b(0x178)):(playWrongSound(),_0x53d189[_0x58674b(0x113)]=_0x58674b(0x110),_0x53d189[_0x58674b(0x111)]='fs-3\x20font-title\x20text-danger',_0x1ebbbf[_0x58674b(0x13f)]['add'](_0x58674b(0x15c))),_0x30a040[_0x58674b(0x13f)][_0x58674b(0x1d3)](_0x58674b(0x13e));}_0x30a040&&_0x30a040['addEventListener'](_0x196d88(0x19e),()=>{const _0x267696=_0x196d88;playClickSound(),_0x30a040[_0x267696(0x113)]===_0x267696(0x17e)?_0xd6b52e=0x0:_0xd6b52e++,_0x576bf8(_0xd6b52e);});const _0x20faf7=document['getElementById']('puzzle-animals-container'),_0x22dd56=document[_0x196d88(0x14b)](_0x196d88(0x1d4)),_0x531c9e=document[_0x196d88(0x14b)](_0x196d88(0x177)),_0x36ea65=document['getElementById'](_0x196d88(0x153));_0x20faf7&&(_0x20faf7[_0x196d88(0x186)](_0x196d88(0x149))[_0x196d88(0x1b6)][_0x196d88(0x120)]='sapi',_0x20faf7[_0x196d88(0x186)](_0x196d88(0x121))[_0x196d88(0x1b6)]['match']=_0x196d88(0x143),_0x20faf7[_0x196d88(0x186)](_0x196d88(0x1ab))['dataset'][_0x196d88(0x120)]=_0x196d88(0x1c6));_0x22dd56&&(_0x22dd56['querySelector'](_0x196d88(0x149))['dataset'][_0x196d88(0x120)]=_0x196d88(0x170),_0x22dd56[_0x196d88(0x186)](_0x196d88(0x121))[_0x196d88(0x1b6)]['match']=_0x196d88(0x143),_0x22dd56['querySelector'](_0x196d88(0x1ab))[_0x196d88(0x1b6)]['match']=_0x196d88(0x1c6));let _0x5af33b=null,_0x957c82=0x0;const _0x4959ce=0x3;function _0x24bc5a(){const _0x4e3445=_0x196d88;if(!_0x22dd56||!_0x20faf7)return;const _0x106d69=Array[_0x4e3445(0x18b)](_0x22dd56[_0x4e3445(0x176)]);_0x106d69['sort'](()=>Math[_0x4e3445(0x1d2)]()-0.5),_0x106d69[_0x4e3445(0x10f)](_0x5234a2=>_0x22dd56[_0x4e3445(0x1b8)](_0x5234a2)),_0x957c82=0x0,_0x5af33b=null;if(_0x531c9e)_0x531c9e[_0x4e3445(0x113)]='';if(_0x36ea65)_0x36ea65['classList'][_0x4e3445(0x1a7)](_0x4e3445(0x13e));document[_0x4e3445(0x1c7)](_0x4e3445(0x114))[_0x4e3445(0x10f)](_0x3da980=>{const _0x557318=_0x4e3445;_0x3da980[_0x557318(0x13f)][_0x557318(0x1d3)](_0x557318(0x13b),_0x557318(0x141)),_0x3da980[_0x557318(0x1b2)]=![];});}_0x20faf7&&_0x20faf7[_0x196d88(0x124)](_0x196d88(0x19e),_0x31417a=>{const _0x40790d=_0x196d88,_0x71bf10=_0x31417a[_0x40790d(0x1b1)][_0x40790d(0x18d)](_0x40790d(0x1a2));if(!_0x71bf10||_0x71bf10['classList']['contains']('matched'))return;playClickSound();if(_0x71bf10===_0x5af33b){_0x71bf10['classList'][_0x40790d(0x1d3)]('selected'),_0x5af33b=null;return;}_0x5af33b&&_0x5af33b[_0x40790d(0x13f)][_0x40790d(0x1d3)](_0x40790d(0x13b));_0x5af33b=_0x71bf10,_0x5af33b[_0x40790d(0x13f)]['add'](_0x40790d(0x13b));if(_0x531c9e)_0x531c9e[_0x40790d(0x113)]='';});_0x22dd56&&_0x22dd56['addEventListener'](_0x196d88(0x19e),_0x28b06a=>{const _0x12cd2a=_0x196d88,_0x2ce516=_0x28b06a[_0x12cd2a(0x1b1)]['closest'](_0x12cd2a(0x19b));if(!_0x2ce516||_0x2ce516['classList'][_0x12cd2a(0x15f)](_0x12cd2a(0x141))||!_0x5af33b)return;playClickSound();if(_0x2ce516['dataset'][_0x12cd2a(0x120)]===_0x5af33b[_0x12cd2a(0x1b6)]['match']){_0x2ce516[_0x12cd2a(0x13f)]['add'](_0x12cd2a(0x141)),_0x5af33b[_0x12cd2a(0x13f)][_0x12cd2a(0x1a7)]('matched'),_0x2ce516['disabled']=!![],_0x5af33b['disabled']=!![],_0x5af33b=null,_0x957c82++;if(_0x531c9e)_0x531c9e['textContent']=_0x12cd2a(0x17d);if(_0x531c9e)_0x531c9e[_0x12cd2a(0x111)]=_0x12cd2a(0x178);}else{playWrongSound();if(_0x531c9e)_0x531c9e['textContent']=_0x12cd2a(0x16f);if(_0x531c9e)_0x531c9e[_0x12cd2a(0x111)]=_0x12cd2a(0x1bc);if(_0x5af33b)_0x5af33b[_0x12cd2a(0x13f)][_0x12cd2a(0x1d3)](_0x12cd2a(0x13b));_0x5af33b=null;}if(_0x957c82===_0x4959ce){if(_0x531c9e)_0x531c9e[_0x12cd2a(0x113)]='Hebat,\x20Selesai!';if(_0x36ea65)_0x36ea65[_0x12cd2a(0x13f)][_0x12cd2a(0x1d3)]('d-none');playWinSound();}});_0x36ea65&&_0x36ea65[_0x196d88(0x124)]('click',()=>{playClickSound(),_0x24bc5a();});const _0x39e9d3=document[_0x196d88(0x14b)](_0x196d88(0x11c)),_0x1bed87=document[_0x196d88(0x14b)]('memory-feedback'),_0x33cfc9=document[_0x196d88(0x14b)](_0x196d88(0x1b5)),_0x381943=Object[_0x196d88(0x1ce)](animalImageMap);let _0x1bed2e=[],_0x3bcf40=0x0,_0x36dc72=![];function _0x327cbb(){const _0x18d5d0=_0x196d88;if(!_0x39e9d3)return;_0x3bcf40=0x0,_0x36dc72=![],_0x1bed2e=[];if(_0x1bed87)_0x1bed87[_0x18d5d0(0x113)]='';if(_0x33cfc9)_0x33cfc9[_0x18d5d0(0x13f)][_0x18d5d0(0x1a7)]('d-none');_0x39e9d3[_0x18d5d0(0x14a)]='';const _0x238696=[..._0x381943,..._0x381943];_0x238696[_0x18d5d0(0x1da)](()=>Math['random']()-0.5),_0x238696[_0x18d5d0(0x10f)](_0x57384b=>{const _0x51948d=_0x18d5d0,_0x2a0678=document['createElement'](_0x51948d(0x173));_0x2a0678[_0x51948d(0x111)]=_0x51948d(0x156),_0x2a0678[_0x51948d(0x1b6)][_0x51948d(0x1ae)]=_0x57384b;const _0x566e06=animalImageMap[_0x57384b];_0x2a0678[_0x51948d(0x14a)]=_0x51948d(0x146)+_0x566e06+'\x22\x20alt=\x22'+_0x57384b+_0x51948d(0x166),_0x2a0678[_0x51948d(0x124)]('click',_0x39acd7),_0x39e9d3[_0x51948d(0x1b8)](_0x2a0678);});}function _0x39acd7(){const _0x3f5a60=_0x196d88;if(_0x36dc72)return;if(this===_0x1bed2e[0x0])return;if(this['classList']['contains'](_0x3f5a60(0x141)))return;playClickSound(),this[_0x3f5a60(0x13f)][_0x3f5a60(0x1a7)](_0x3f5a60(0x1ca)),_0x1bed2e[_0x3f5a60(0x160)](this),_0x1bed2e[_0x3f5a60(0x198)]===0x2&&(_0x36dc72=!![],_0x21633a());}function _0x21633a(){const _0x1ed935=_0x196d88,[_0x10c379,_0x244b5f]=_0x1bed2e,_0x513a07=_0x10c379[_0x1ed935(0x1b6)][_0x1ed935(0x1ae)]===_0x244b5f[_0x1ed935(0x1b6)][_0x1ed935(0x1ae)];_0x513a07?_0x32a45b(_0x10c379,_0x244b5f):_0x38c25b(_0x10c379,_0x244b5f);}function _0x32a45b(_0x2e7c93,_0x5d83aa){const _0x29649c=_0x196d88,_0x28477c=_0x2e7c93[_0x29649c(0x186)](_0x29649c(0x1a5)),_0x46152c=_0x5d83aa[_0x29649c(0x186)](_0x29649c(0x1a5));_0x28477c&&(_0x28477c[_0x29649c(0x13f)][_0x29649c(0x1d3)](_0x29649c(0x19a)),_0x28477c['classList'][_0x29649c(0x1a7)]('fa-check'));_0x46152c&&(_0x46152c[_0x29649c(0x13f)][_0x29649c(0x1d3)](_0x29649c(0x19a)),_0x46152c[_0x29649c(0x13f)][_0x29649c(0x1a7)](_0x29649c(0x14d)));_0x2e7c93[_0x29649c(0x13f)][_0x29649c(0x1d3)](_0x29649c(0x1ca)),_0x5d83aa[_0x29649c(0x13f)][_0x29649c(0x1d3)](_0x29649c(0x1ca)),_0x2e7c93[_0x29649c(0x13f)][_0x29649c(0x1a7)](_0x29649c(0x141)),_0x5d83aa[_0x29649c(0x13f)][_0x29649c(0x1a7)](_0x29649c(0x141)),_0x3bcf40++,_0x1bed2e=[],_0x36dc72=![];if(_0x3bcf40===_0x381943[_0x29649c(0x198)]){if(_0x1bed87)_0x1bed87[_0x29649c(0x113)]='Hebat,\x20Selesai!';if(_0x33cfc9)_0x33cfc9[_0x29649c(0x13f)][_0x29649c(0x1d3)](_0x29649c(0x13e));playWinSound();}}function _0x38c25b(_0x2defe1,_0x3ba4b4){playWrongSound(),setTimeout(()=>{const _0x1d1dc3=_0x38de;_0x2defe1[_0x1d1dc3(0x13f)]['remove'](_0x1d1dc3(0x1ca)),_0x3ba4b4[_0x1d1dc3(0x13f)]['remove'](_0x1d1dc3(0x1ca)),_0x1bed2e=[],_0x36dc72=![];},0x3e8);}_0x33cfc9&&_0x33cfc9[_0x196d88(0x124)](_0x196d88(0x19e),()=>{playClickSound(),_0x327cbb();});const _0x3347da=document['getElementById'](_0x196d88(0x190)),_0x1c15bd=document[_0x196d88(0x14b)](_0x196d88(0x1a6)),_0x12c867=document[_0x196d88(0x14b)](_0x196d88(0x14f)),_0x316aa6=document[_0x196d88(0x14b)](_0x196d88(0x188)),_0x524b41=['sapi',_0x196d88(0x143),'lebah'],_0x28f8e3=['0%\x200%',_0x196d88(0x13c),_0x196d88(0x1ad),'100%\x20100%'];let _0x1ab32e=null,_0x2fb9aa=0x0;function _0x57bb66(){const _0x4546f3=_0x196d88;if(!_0x3347da||!_0x1c15bd)return;_0x2fb9aa=0x0,_0x3347da['innerHTML']='',_0x1c15bd['innerHTML']='';if(_0x12c867)_0x12c867[_0x4546f3(0x113)]='';if(_0x316aa6)_0x316aa6[_0x4546f3(0x13f)]['add'](_0x4546f3(0x13e));const _0x1f236d=_0x524b41[Math[_0x4546f3(0x126)](Math[_0x4546f3(0x1d2)]()*_0x524b41[_0x4546f3(0x198)])],_0x457917=animalImageMap[_0x1f236d];let _0x23176d=[];for(let _0x10a75f=0x0;_0x10a75f<0x4;_0x10a75f++){const _0x25e876=document[_0x4546f3(0x12e)](_0x4546f3(0x173));_0x25e876[_0x4546f3(0x111)]='puzzle-drop-zone',_0x25e876[_0x4546f3(0x1b6)][_0x4546f3(0x157)]=_0x10a75f,_0x3347da['appendChild'](_0x25e876);const _0x1b935d=document[_0x4546f3(0x12e)]('div');_0x1b935d['className']='puzzle-piece-drag',_0x1b935d['draggable']=!![],_0x1b935d['dataset'][_0x4546f3(0x157)]=_0x10a75f,_0x1b935d['style'][_0x4546f3(0x195)]=_0x4546f3(0x1ac)+_0x457917+')',_0x1b935d[_0x4546f3(0x168)][_0x4546f3(0x1b9)]=_0x28f8e3[_0x10a75f],_0x23176d['push'](_0x1b935d);}_0x23176d['sort'](()=>Math[_0x4546f3(0x1d2)]()-0.5),_0x23176d[_0x4546f3(0x10f)](_0x44e06a=>{const _0x486ffe=_0x4546f3;_0x1c15bd[_0x486ffe(0x1b8)](_0x44e06a),_0x14525d(_0x44e06a);}),document[_0x4546f3(0x1c7)]('.puzzle-drop-zone')[_0x4546f3(0x10f)](_0x306137=>{_0x6aec9c(_0x306137);});}function _0x14525d(_0x49b6a1){const _0x4a0d54=_0x196d88;_0x49b6a1[_0x4a0d54(0x124)]('dragstart',_0x3297aa=>{const _0x3394b3=_0x4a0d54;_0x1ab32e=_0x49b6a1,_0x3297aa[_0x3394b3(0x135)][_0x3394b3(0x164)](_0x3394b3(0x17c),_0x49b6a1[_0x3394b3(0x1b6)][_0x3394b3(0x157)]),setTimeout(()=>_0x49b6a1[_0x3394b3(0x13f)][_0x3394b3(0x1a7)]('dragging'),0x0);if(_0x12c867)_0x12c867[_0x3394b3(0x113)]='';}),_0x49b6a1[_0x4a0d54(0x124)](_0x4a0d54(0x12c),()=>{const _0x124b45=_0x4a0d54;_0x1ab32e&&_0x1ab32e[_0x124b45(0x13f)][_0x124b45(0x1d3)](_0x124b45(0x167)),_0x1ab32e=null;});}function _0x6aec9c(_0x1bcf0e){const _0x4bb5b1=_0x196d88;_0x1bcf0e['addEventListener'](_0x4bb5b1(0x19c),_0x560259=>{const _0x2e44ef=_0x4bb5b1;_0x560259[_0x2e44ef(0x1dc)](),!_0x1bcf0e['hasChildNodes']()&&_0x1bcf0e[_0x2e44ef(0x13f)][_0x2e44ef(0x1a7)]('drag-over');}),_0x1bcf0e[_0x4bb5b1(0x124)](_0x4bb5b1(0x148),()=>{const _0x41a4bf=_0x4bb5b1;_0x1bcf0e[_0x41a4bf(0x13f)]['remove'](_0x41a4bf(0x116));}),_0x1bcf0e['addEventListener'](_0x4bb5b1(0x162),_0x191853=>{const _0x418db8=_0x4bb5b1;_0x191853[_0x418db8(0x1dc)](),_0x1bcf0e[_0x418db8(0x13f)][_0x418db8(0x1d3)](_0x418db8(0x116));if(_0x1bcf0e[_0x418db8(0x19f)]()||!_0x1ab32e)return;const _0xe7ec37=_0x1ab32e[_0x418db8(0x1b6)]['pos'],_0x5f3d39=_0x1bcf0e['dataset'][_0x418db8(0x157)];if(_0xe7ec37===_0x5f3d39){playClickSound(),_0x1bcf0e[_0x418db8(0x1b8)](_0x1ab32e),_0x1ab32e['draggable']=![],_0x1ab32e[_0x418db8(0x13f)][_0x418db8(0x1a7)](_0x418db8(0x1d6)),_0x1ab32e[_0x418db8(0x13f)]['remove']('dragging'),_0x1bcf0e[_0x418db8(0x168)][_0x418db8(0x1be)]=_0x418db8(0x1b0),_0x2fb9aa++;_0x12c867&&(_0x12c867[_0x418db8(0x113)]=_0x418db8(0x12a),_0x12c867['className']='fs-3\x20font-title\x20text-success');if(_0x2fb9aa===0x4){if(_0x12c867)_0x12c867['textContent']=_0x418db8(0x17f);if(_0x316aa6)_0x316aa6[_0x418db8(0x13f)]['remove'](_0x418db8(0x13e));playWinSound();}}else playWrongSound(),_0x12c867&&(_0x12c867['textContent']=_0x418db8(0x163),puzzle4Failure['className']=_0x418db8(0x1bc));});}_0x316aa6&&_0x316aa6[_0x196d88(0x124)]('click',()=>{playClickSound(),_0x57bb66();}),_0x576bf8(_0xd6b52e),_0x24bc5a(),_0x327cbb(),_0x57bb66(),_0x119aed();});
+        const soundMap = {
+            'moo': document.getElementById('sound-sapi'),
+            'baa': document.getElementById('sound-domba'),
+            'cluck': document.getElementById('sound-ayam'),
+            'neigh': document.getElementById('sound-kuda'),
+            'buzz': document.getElementById('sound-lebah'),
+            'quack': document.getElementById('sound-bebek')
+        };
+        
+
+        const infoSoundMap = {
+            'sapi': document.getElementById('info-sapi'),
+            'domba': document.getElementById('info-domba'),
+            'ayam': document.getElementById('info-ayam'),
+            'kuda': document.getElementById('info-kuda'),
+            'lebah': document.getElementById('info-lebah'),
+            'bebek': document.getElementById('info-bebek')
+        };
+        
+        const petunjukSoundMap = {
+            'petunjuk1': document.getElementById('sound-petunjuk1'),
+            'petunjuk2': document.getElementById('sound-petunjuk2'),
+            'petunjuk3': document.getElementById('sound-petunjuk3'),
+            'petunjuk4': document.getElementById('sound-petunjuk4')
+        };
+
+        const tutorSoundMap = {
+            'tutor1': document.getElementById('sound-tutor1'),
+            'tutor2': document.getElementById('sound-tutor2'),
+            'tutor3': document.getElementById('sound-tutor3'),
+            'tutor4': document.getElementById('sound-tutor4')
+        };
+        
+        const animalImageMap = {
+            'sapi': 'image/Sapi.png',
+            'domba': 'image/Domba.png',
+            'ayam': 'image/Ayam.png',
+            'kuda': 'image/Kuda.png',
+            'lebah': 'image/Lebah.png',
+            'bebek': 'image/Bebek.png'
+        };
+        
+        const soundQuizMap = {
+             'moo': 'sapi',
+             'baa': 'domba',
+             'cluck': 'ayam',
+             'neigh': 'kuda',
+             'buzz': 'lebah',
+             'quack': 'bebek'
+        };
+
+        let soundClick, soundWrong, soundFlip, soundBgm, soundMenang; 
+
+
+        function stopAllSounds(except = null) {
+            const allSounds = [
+                ...Object.values(soundMap),
+                ...Object.values(infoSoundMap),
+                ...Object.values(petunjukSoundMap),
+                ...Object.values(tutorSoundMap),
+                soundClick, soundWrong, soundFlip, soundMenang 
+            ];
+            
+            allSounds.forEach(sound => {
+                if (sound && sound !== except) {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }
+            });
+        }
+
+        function playSound(animalKey) { 
+            stopAllSounds();
+            
+            let audio;
+            if (soundMap[animalKey]) {
+                audio = soundMap[animalKey]; 
+            } else {
+
+                const soundKey = Object.keys(soundQuizMap).find(key => soundQuizMap[key] === animalKey);
+                if(soundKey && soundMap[soundKey]) {
+                    audio = soundMap[soundKey]; 
+                }
+            }
+
+            if (audio) {
+                audio.play().catch(e => {
+                    if (e.name !== 'NotAllowedError') {
+                         console.error("Gagal memutar audio:", e);
+                    }
+                });
+            }
+        }
+        
+        function playInfoSound(animal) { 
+            stopAllSounds();
+            
+           const infoSoundKeyMap = {
+                'sapi': document.getElementById('info-sapi'),
+                'domba': document.getElementById('info-domba'),
+                'ayam': document.getElementById('info-ayam'),
+                'kuda': document.getElementById('info-kuda'),
+                'lebah': document.getElementById('info-lebah'),
+                'bebek': document.getElementById('info-bebek')
+            };
+
+            const audio = infoSoundKeyMap[animal];
+            if (audio) {
+                audio.play().catch(e => {
+                    if (e.name !== 'NotAllowedError') {
+                         console.error("Gagal memutar audio info:", e);
+                    }
+                });
+            }
+        }
+        
+        function playPetunjukSound(soundKey) {
+            stopAllSounds();
+            
+            const audio = petunjukSoundMap[soundKey];
+            if (audio) {
+                audio.play().catch(e => {
+                    if (e.name !== 'NotAllowedError') {
+                         console.error("Gagal memutar audio petunjuk:", e);
+                    }
+                });
+            }
+        }
+
+        function playTutorSound(soundKey) {
+            stopAllSounds();
+            
+            const audio = tutorSoundMap[soundKey];
+            if (audio) {
+                audio.play().catch(e => {
+                    if (e.name !== 'NotAllowedError') {
+                            console.error("Gagal memutar audio tutorial:", e);
+                    }
+                });
+            }
+        }
+
+        function playClickSound() {
+            if (soundClick) {
+                soundClick.currentTime = 0;
+                soundClick.play().catch(e => {});
+            }
+        }
+        
+        function playWrongSound() {
+            if (soundWrong) {
+                soundWrong.currentTime = 0;
+                soundWrong.play().catch(e => {});
+            }
+        }
+
+        function playFlipSound() {
+            if (soundFlip) {
+                soundFlip.currentTime = 0;
+                soundFlip.play().catch(e => {});
+            }
+        }
+
+        function playWinSound() {
+            if (soundMenang) {
+                stopAllSounds(); 
+                soundMenang.currentTime = 0;
+                soundMenang.play().catch(e => {});
+            }
+        }
+
+
+        // --- EVENT LISTENER UTAMA ---
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            soundClick = document.getElementById('sound-click');
+            soundWrong = document.getElementById('sound-wrong');
+            soundFlip = document.getElementById('sound-flip');
+            soundBgm = document.getElementById('sound-bgm');
+            soundMenang = document.getElementById('sound-menang'); 
+            
+            const muteBtn = document.getElementById('mute-btn');
+            const muteIcon = muteBtn.querySelector('i');
+            let isMuted = false;
+            
+            if (soundBgm) {
+                soundBgm.volume = 0.3; 
+            }
+
+
+            muteBtn.addEventListener('click', () => {
+                isMuted = !isMuted;
+                
+                if (soundBgm) {
+                    soundBgm.muted = isMuted;
+                }
+
+                if (isMuted) {
+                    muteIcon.classList.remove('fa-volume-high');
+                    muteIcon.classList.add('fa-volume-mute');
+                    if (soundBgm) soundBgm.pause(); 
+                } else {
+                    muteIcon.classList.remove('fa-volume-mute');
+                    muteIcon.classList.add('fa-volume-high');
+                    if (soundBgm) {
+                         soundBgm.play().catch(e => console.log("BGM play failed, user interaction needed."));
+                    }
+                }
+            });
+
+
+            function startAudioContext() {
+                if (!isMuted && soundBgm) {
+                    soundBgm.play().catch(e => console.log("BGM auto-play failed, waiting for interaction."));
+                }
+                document.body.removeEventListener('click', startAudioContext);
+                document.body.removeEventListener('touchend', startAudioContext);
+            }
+            document.body.addEventListener('click', startAudioContext);
+            document.body.addEventListener('touchend', startAudioContext);
+
+
+            // --- Logika Membalik Buku ---
+            const pages = document.querySelectorAll('.page');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            let currentPage = 0;
+            let isFlipping = false;
+            const totalPages = pages.length;
+
+            function updatePageZIndexes() {
+                pages.forEach((page, index) => {
+                    if (index < currentPage) {
+                        page.style.zIndex = index + 1;
+                    } else {
+                        page.style.zIndex = totalPages - index;
+                    }
+                });
+            }
+
+            function flipPage(direction) {
+                if (isFlipping) return;
+                
+                stopAllSounds(); 
+                playFlipSound();
+
+                if (direction === 'next') {
+                    if (currentPage >= totalPages) return; 
+
+                    isFlipping = true;
+                    const pageToFlip = pages[currentPage];
+                    pageToFlip.style.zIndex = totalPages + 1;
+                    pageToFlip.classList.add('flipped');
+                    currentPage++;
+
+                } else if (direction === 'prev') {
+                    if (currentPage <= 0) return; 
+
+                    isFlipping = true;
+                    currentPage--;
+                    const pageToFlip = pages[currentPage];
+                    pageToFlip.style.zIndex = totalPages + 1;
+                    pageToFlip.classList.remove('flipped');
+                }
+
+                setTimeout(() => {
+                    isFlipping = false;
+                    updatePageZIndexes();
+                }, 800); 
+            }
+
+            function goToPage(targetIndex) {
+                if (isFlipping) return;               
+                if (targetIndex === currentPage) {
+                    return; 
+                }
+                
+                stopAllSounds();               
+                playClickSound(); 
+
+                if (targetIndex === currentPage + 1) {
+                    flipPage('next');
+                } else if (targetIndex === currentPage - 1) {
+                    flipPage('prev');
+                } else {
+                    isFlipping = true;
+                    
+                    pages.forEach((page, index) => {
+                        if (index < targetIndex) {
+                            page.classList.add('flipped');
+                        } else {
+                            page.classList.remove('flipped');
+                        }
+                    });
+
+                    currentPage = targetIndex;
+
+                    setTimeout(() => {
+                        isFlipping = false;
+                        updatePageZIndexes();
+                    }, 300); 
+                }
+            }
+
+
+            prevBtn.addEventListener('click', () => {
+                playClickSound(); 
+                flipPage('prev');
+            });
+            nextBtn.addEventListener('click', () => {
+                playClickSound(); 
+                flipPage('next');
+            });
+
+            pages.forEach((page, index) => {
+                page.addEventListener('click', (e) => {
+                    if (e.target.closest('button') || e.target.closest('img[id$="-btn"]') || e.target.closest('img[onclick]') || e.target.closest('a') || e.target.closest('[draggable="true"]') || e.target.closest('.memory-card') || e.target.closest('.puzzle-piece-drag') || e.target.closest('.petunjuk-item') || e.target.closest('[id^="tutor-game-"]') || e.target.closest('.daftar-isi-item')) {
+                        return;
+                    }
+                    
+                    const isFlippedPage = page.classList.contains('flipped');
+                    if (isFlippedPage && index === currentPage - 1) {
+                         flipPage('prev');
+                    } else if (!isFlippedPage && index === currentPage) {
+                        flipPage('next');
+                    }
+                });
+            });
+
+            updatePageZIndexes();
+
+            document.querySelectorAll('.daftar-isi-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const targetPageStr = e.currentTarget.dataset.targetPage;
+                    if (targetPageStr) {
+                        const targetIndex = parseInt(targetPageStr, 10);
+                        goToPage(targetIndex);
+                    }
+                });
+            });
+
+
+            // BARU: Event listener untuk item petunjuk
+            document.querySelectorAll('.petunjuk-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    playClickSound(); 
+                    const soundKey = item.dataset.sound;
+                    if (soundKey) {
+                        playPetunjukSound(soundKey);
+                    }
+                });
+            });
+
+            // Halaman Sapi
+            document.getElementById('cow-btn').addEventListener('click', () => {
+                playClickSound(); 
+                playInfoSound('sapi'); 
+                const milkDiv = document.getElementById('milk-interaction');
+                const milkFill = document.getElementById('milk-fill');
+                
+                milkDiv.classList.remove('d-none');
+                milkFill.classList.remove('milk-fill-anim'); 
+                void milkFill.offsetWidth; 
+                milkFill.classList.add('milk-fill-anim'); 
+            });
+
+            // Halaman Domba
+            document.getElementById('sheep-btn').addEventListener('click', () => {
+                playClickSound(); 
+                playInfoSound('domba'); 
+                const woolIcon = document.getElementById('wool-interaction');
+                woolIcon.classList.remove('d-none');
+                woolIcon.style.opacity = '1';
+                woolIcon.style.transform = 'translateY(-20px) rotate(-15deg)';
+                
+                setTimeout(() => { 
+                    woolIcon.style.opacity = '0';
+                    woolIcon.style.transform = 'translateY(0) rotate(0deg)';
+                    setTimeout(() => woolIcon.classList.add('d-none'), 500);
+                }, 1500);
+            });
+
+            // --- LOGIKA DRAG N DROP TELUR ---
+            const draggableEggs = document.querySelectorAll('.egg-draggable');
+            const eggBasket = document.getElementById('egg-basket');
+            const eggNest = document.getElementById('egg-nest');
+            const eggFeedback = document.getElementById('egg-feedback');
+            let eggsInBasket = 0;
+            const totalEggs = 3; 
+
+            function resetEggGame() {
+                if (!eggBasket || !eggNest) return; 
+                
+                eggBasket.innerHTML = ''; 
+                if(eggFeedback) eggFeedback.textContent = '';
+                eggsInBasket = 0;
+
+                const eggIds = ['egg1', 'egg2', 'egg3']; 
+                
+                eggIds.forEach(id => {
+                    const egg = document.getElementById(id);
+                    if (egg) { 
+                        egg.draggable = true;
+                        egg.classList.remove('placed', 'dragging');
+                        if (egg.parentElement !== eggNest) {
+                            eggNest.appendChild(egg);
+                        }
+                    }
+                });
+            }
+
+            draggableEggs.forEach(egg => {
+                egg.addEventListener('dragstart', (e) => {
+                    playSound('cluck'); 
+                    e.dataTransfer.setData('text/plain', e.target.id);
+                    egg.classList.add('dragging');
+                    if (eggFeedback) eggFeedback.textContent = '';
+                });
+
+                egg.addEventListener('dragend', () => {
+                    egg.classList.remove('dragging');
+                });
+            });
+
+            if (eggBasket) {
+                eggBasket.addEventListener('dragover', (e) => {
+                    e.preventDefault(); 
+                    eggBasket.classList.add('drag-over');
+                });
+
+                eggBasket.addEventListener('dragleave', () => {
+                    eggBasket.classList.remove('drag-over');
+                });
+
+                eggBasket.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    eggBasket.classList.remove('drag-over');
+                    
+                    const id = e.dataTransfer.getData('text/plain');
+                    const draggableElement = document.getElementById(id);
+
+                    if (draggableElement && !draggableElement.classList.contains('placed')) {
+                        playClickSound(); 
+                        eggBasket.appendChild(draggableElement);
+                        draggableElement.draggable = false;
+                        draggableElement.classList.add('placed');
+                        eggsInBasket++;
+
+                        if (eggsInBasket === totalEggs) {
+                            if (eggFeedback) eggFeedback.textContent = "Hebat! Semua telur aman!";
+                            setTimeout(resetEggGame, 3000); 
+                        }
+                    }
+                });
+            }
+            
+            // Halaman Kuda
+            document.getElementById('horse-btn').addEventListener('click', (e) => {
+                playClickSound(); 
+                playInfoSound('kuda'); 
+                const horse = e.currentTarget;
+                horse.classList.add('horse-run-anim');
+                setTimeout(() => horse.classList.remove('horse-run-anim'), 1000);
+            });
+            
+            // Halaman Lebah
+            document.getElementById('bee-btn').addEventListener('click', (e) => {
+                playClickSound(); 
+                playInfoSound('lebah'); 
+                const bee = e.currentTarget;
+                bee.classList.add('bee-fly-anim');
+                setTimeout(() => bee.classList.remove('bee-fly-anim'), 500);
+            });
+
+            // Halaman Bebek
+            document.getElementById('duck-btn').addEventListener('click', () => {
+                playClickSound(); 
+                playInfoSound('bebek'); 
+                const splash = document.getElementById('water-splash');
+                splash.classList.remove('d-none');
+                splash.classList.add('bee-fly-anim'); 
+                setTimeout(() => {
+                    splash.classList.add('d-none');
+                    splash.classList.remove('bee-fly-anim');
+                }, 500);
+            });
+
+            // --- BARU: Event Listener Tombol Tutorial Kuis ---
+            document.getElementById('tutor-game-1')?.addEventListener('click', () => {
+                playClickSound(); 
+                playTutorSound('tutor1');
+            });
+            document.getElementById('tutor-game-2')?.addEventListener('click', () => {
+                playClickSound(); 
+                playTutorSound('tutor2');
+            });
+            document.getElementById('tutor-game-3')?.addEventListener('click', () => {
+                playClickSound(); 
+                playTutorSound('tutor3');
+            });
+            document.getElementById('tutor-game-4')?.addEventListener('click', () => {
+                playClickSound(); 
+                playTutorSound('tutor4');
+            });
+
+            // --- LOGIKA KUIS ---
+
+            // --- KUIS 1: TEBAK SUARA ---
+            const soundQuizQuestions = [
+                { sound: 'moo', options: ['sapi', 'domba', 'ayam'], answer: 'sapi' },
+                { sound: 'cluck', options: ['kuda', 'ayam', 'bebek'], answer: 'ayam' },
+                { sound: 'neigh', options: ['lebah', 'kuda', 'sapi'], answer: 'kuda' },
+                { sound: 'buzz', options: ['domba', 'bebek', 'lebah'], answer: 'lebah' }
+            ];
+            let currentSoundQuestion = 0;
+            let soundQuizInProgress = true;
+
+            const playQuizSoundBtn = document.getElementById('play-quiz-sound-btn');
+            const quizOptionsContainer = document.getElementById('quiz-options-container');
+            const quizFeedback = document.getElementById('quiz-feedback');
+            const nextQuizBtn = document.getElementById('next-quiz-btn');
+
+            function loadSoundQuestion(index) {
+                if (!quizFeedback) return; 
+
+                if (index >= soundQuizQuestions.length) {
+                    quizFeedback.textContent = "Permainan Selesai, Kamu Hebat!";
+                    quizFeedback.className = "fs-3 font-title text-success";
+                    playQuizSoundBtn.classList.add('d-none');
+                    quizOptionsContainer.classList.add('d-none');
+                    nextQuizBtn.textContent = "Ulangi Kuis Suara";
+                    nextQuizBtn.classList.remove('d-none');
+                    soundQuizInProgress = false;
+                    playWinSound(); 
+                    return;
+                }
+
+                soundQuizInProgress = true;
+                const question = soundQuizQuestions[index];
+                
+                playQuizSoundBtn.classList.remove('d-none');
+                quizOptionsContainer.classList.remove('d-none');
+                quizFeedback.textContent = "";
+                nextQuizBtn.classList.add('d-none');
+                nextQuizBtn.textContent = "Soal Berikutnya";
+
+                playQuizSoundBtn.onclick = () => {
+                    playClickSound(); 
+                    playSound(question.sound);
+                };
+                
+                quizOptionsContainer.innerHTML = '';
+                question.options.forEach((animal, i) => {
+                    const optionBtn = document.createElement('button');
+                    optionBtn.className = 'quiz-option';
+                    optionBtn.dataset.animal = animal;
+                    
+                    const imgPath = animalImageMap[animal];
+                    optionBtn.innerHTML = `<img src="${imgPath}" alt="${animal}">`;
+                    
+                    optionBtn.onclick = () => {
+                        playClickSound(); 
+                        checkSoundAnswer(animal, question.answer, optionBtn);
+                    };
+                    quizOptionsContainer.appendChild(optionBtn);
+                });
+            }
+
+            function checkSoundAnswer(selected, correct, btn) {
+                if (!soundQuizInProgress) return;
+                soundQuizInProgress = false; 
+
+                const allOptions = quizOptionsContainer.querySelectorAll('.quiz-option');
+                allOptions.forEach(opt => {
+                    opt.disabled = true; 
+                    if (opt.dataset.animal === correct) {
+                        opt.classList.add('correct');
+                    }
+                });
+
+                if (selected === correct) {
+                    quizFeedback.textContent = "Benar!";
+                    quizFeedback.className = "fs-3 font-title text-success";
+                } else {
+                    playWrongSound(); 
+                    quizFeedback.textContent = "Coba Lagi Nanti!";
+                    quizFeedback.className = "fs-3 font-title text-danger";
+                    btn.classList.add('wrong');
+                }
+                nextQuizBtn.classList.remove('d-none');
+            }
+
+            if(nextQuizBtn) {
+                nextQuizBtn.addEventListener('click', () => {
+                    playClickSound(); // BARU
+                    if (nextQuizBtn.textContent === "Ulangi Kuis Suara") {
+                        currentSoundQuestion = 0;
+                    } else {
+                        currentSoundQuestion++;
+                    }
+                    loadSoundQuestion(currentSoundQuestion);
+                });
+            }
+            
+            // --- KUIS 2: PUZZLE PASANGKAN ---
+            const animalsContainer = document.getElementById('puzzle-animals-container');
+            const shadowsContainer = document.getElementById('puzzle-shadows-container');
+            const puzzleFeedback = document.getElementById('puzzle-feedback');
+            const resetPuzzleBtn = document.getElementById('reset-puzzle-btn');
+            
+            // Corrected data-match values if they were wrong before
+            if (animalsContainer && shadowsContainer) {
+                 animalsContainer.querySelector('[data-match="cow"]')?.setAttribute('data-match', 'sapi');
+                 animalsContainer.querySelector('[data-match="chicken"]')?.setAttribute('data-match', 'ayam');
+                 animalsContainer.querySelector('[data-match="horse"]')?.setAttribute('data-match', 'kuda');
+                 shadowsContainer.querySelector('[data-match="cow"]')?.setAttribute('data-match', 'sapi');
+                 shadowsContainer.querySelector('[data-match="chicken"]')?.setAttribute('data-match', 'ayam');
+                 shadowsContainer.querySelector('[data-match="horse"]')?.setAttribute('data-match', 'kuda');
+            }
+            
+            let selectedAnimal = null;
+            let matchedPairs = 0;
+            const totalPairs = 3;
+
+            function initPuzzle() {
+                if (!shadowsContainer || !animalsContainer) return; 
+
+                const shadows = Array.from(shadowsContainer.children);
+                shadows.sort(() => Math.random() - 0.5);
+                shadows.forEach(shadow => shadowsContainer.appendChild(shadow));
+
+                matchedPairs = 0;
+                selectedAnimal = null;
+                if(puzzleFeedback) puzzleFeedback.textContent = "";
+                if(resetPuzzleBtn) resetPuzzleBtn.classList.add('d-none');
+
+                document.querySelectorAll('#puzzle-animals-container .puzzle-piece, #puzzle-shadows-container .puzzle-piece').forEach(p => {
+                    p.classList.remove('selected', 'matched');
+                    p.disabled = false;
+                });
+            }
+
+            if (animalsContainer) {
+                animalsContainer.addEventListener('click', (e) => {
+                    const animalBtn = e.target.closest('.puzzle-piece.animal');
+                    if (!animalBtn || animalBtn.classList.contains('matched')) return;
+                    
+                    playClickSound(); 
+
+                    if (animalBtn === selectedAnimal) {
+                        animalBtn.classList.remove('selected');
+                        selectedAnimal = null;
+                        return;
+                    }
+
+                    if (selectedAnimal) {
+                        selectedAnimal.classList.remove('selected');
+                    }
+
+                    selectedAnimal = animalBtn;
+                    selectedAnimal.classList.add('selected');
+                    if(puzzleFeedback) puzzleFeedback.textContent = "";
+                });
+            }
+
+            if (shadowsContainer) {
+                shadowsContainer.addEventListener('click', (e) => {
+                    const shadowBtn = e.target.closest('.puzzle-piece.puzzle-shadow');
+                    if (!shadowBtn || shadowBtn.classList.contains('matched') || !selectedAnimal) return;
+                    
+                    playClickSound(); 
+
+                    if (shadowBtn.dataset.match === selectedAnimal.dataset.match) {
+                        shadowBtn.classList.add('matched');
+                        selectedAnimal.classList.add('matched');
+                        shadowBtn.disabled = true;
+                        selectedAnimal.disabled = true;
+                        selectedAnimal = null;
+                        matchedPairs++;
+                        if(puzzleFeedback) puzzleFeedback.textContent = "Cocok!";
+                        if(puzzleFeedback) puzzleFeedback.className = "fs-3 font-title text-success";
+                    } else {
+                        playWrongSound(); 
+                        if(puzzleFeedback) puzzleFeedback.textContent = "Bukan!";
+                        if(puzzleFeedback) puzzleFeedback.className = "fs-3 font-title text-danger";
+                        if(selectedAnimal) selectedAnimal.classList.remove('selected');
+                        selectedAnimal = null;
+                    }
+
+                    if (matchedPairs === totalPairs) {
+                        if(puzzleFeedback) puzzleFeedback.textContent = "Hebat, Selesai!";
+                        if(resetPuzzleBtn) resetPuzzleBtn.classList.remove('d-none');
+                        playWinSound(); 
+                    }
+                });
+            }
+            
+            if (resetPuzzleBtn) {
+                resetPuzzleBtn.addEventListener('click', () => {
+                    playClickSound(); 
+                    initPuzzle();
+                });
+            }
+
+            // --- KUIS 3: PUZZLE MEMORI ---
+            const memoryGrid = document.getElementById('memory-grid');
+            const memoryFeedback = document.getElementById('memory-feedback');
+            const resetMemoryBtn = document.getElementById('reset-memory-btn');
+
+            const memoryAnimals = Object.keys(animalImageMap); 
+            let flippedCards = [];
+            let matchedMemoryPairs = 0;
+            let lockBoard = false;
+
+            function createMemoryBoard() {
+                if (!memoryGrid) return; 
+
+                matchedMemoryPairs = 0;
+                lockBoard = false;
+                flippedCards = [];
+                if (memoryFeedback) memoryFeedback.textContent = '';
+                if (resetMemoryBtn) resetMemoryBtn.classList.add('d-none');
+                memoryGrid.innerHTML = '';
+
+                // Select 6 unique animals for the 12 cards (6 pairs)
+                 const selectedAnimals = memoryAnimals.sort(() => 0.5 - Math.random()).slice(0, 6);
+                const cardData = [...selectedAnimals, ...selectedAnimals];
+                cardData.sort(() => Math.random() - 0.5);
+
+                cardData.forEach(animalName => {
+                    const card = document.createElement('div');
+                    card.className = 'memory-card';
+                    card.dataset.animal = animalName;
+
+                    const imgPath = animalImageMap[animalName];
+                    
+                    card.innerHTML = `
+                        <div class="card-face card-front"><img src="${imgPath}" alt="${animalName}"></div>
+                        <div class="card-face card-back"><i class="fa-solid fa-question"></i></div>
+                    `;
+                    
+                    card.addEventListener('click', flipCard);
+                    memoryGrid.appendChild(card);
+                });
+            }
+
+            function flipCard() {
+                if (lockBoard) return;
+                if (this === flippedCards[0]) return; 
+                if (this.classList.contains('matched')) return; 
+                
+                playClickSound(); 
+
+                this.classList.add('flipped');
+                flippedCards.push(this);
+
+                if (flippedCards.length === 2) {
+                    lockBoard = true;
+                    checkForMatch();
+                }
+            }
+
+            function checkForMatch() {
+                const [card1, card2] = flippedCards;
+                const isMatch = card1.dataset.animal === card2.dataset.animal;
+
+                if (isMatch) {
+                    disableCards(card1, card2);
+                } else {
+                    unflipCards(card1, card2);
+                }
+            }
+
+			function disableCards(card1, card2) {
+                const icon1 = card1.querySelector('.card-back i');
+                const icon2 = card2.querySelector('.card-back i');
+                
+                if (icon1) {
+                    icon1.classList.remove('fa-question');
+                    icon1.classList.add('fa-check');
+                }
+                if (icon2) {
+                    icon2.classList.remove('fa-question');
+                    icon2.classList.add('fa-check');
+                }
+
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                
+                matchedMemoryPairs++;
+                flippedCards = [];
+                lockBoard = false;
+
+                if (matchedMemoryPairs === 6) { // Check against 6 pairs now
+                    if (memoryFeedback) memoryFeedback.textContent = 'Hebat, Selesai!';
+                    if (resetMemoryBtn) resetMemoryBtn.classList.remove('d-none');
+                    playWinSound(); 
+                }
+            }
+
+            function unflipCards(card1, card2) {
+                playWrongSound(); 
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                    lockBoard = false;
+                }, 1000); 
+            }
+
+            if (resetMemoryBtn) {
+                resetMemoryBtn.addEventListener('click', () => {
+                    playClickSound(); 
+                    createMemoryBoard();
+                });
+            }
+            
+            
+            // --- BARU: KUIS 4 (PUZZLE SUSUN) ---
+            const puzzleGridTarget = document.getElementById('puzzle-grid-target');
+            const puzzlePiecesSource = document.getElementById('puzzle-pieces-source');
+            const puzzle4Feedback = document.getElementById('puzzle-4-feedback');
+            const resetPuzzle4Btn = document.getElementById('reset-puzzle-4-btn');
+            
+            const puzzle4Animals = ['sapi', 'ayam', 'lebah', 'domba', 'kuda', 'bebek']; // More animals
+            const piecePositions = ['0% 0%', '100% 0%', '0% 100%', '100% 100%']; // [0, 1, 2, 3]
+            let draggedPuzzlePiece = null;
+            let correctPieces = 0;
+
+            function initGame4Puzzle() {
+                if (!puzzleGridTarget || !puzzlePiecesSource) return;
+
+                correctPieces = 0;
+                puzzleGridTarget.innerHTML = '';
+                puzzlePiecesSource.innerHTML = '';
+                if (puzzle4Feedback) puzzle4Feedback.textContent = '';
+                if (resetPuzzle4Btn) resetPuzzle4Btn.classList.add('d-none');
+
+                const randomAnimal = puzzle4Animals[Math.floor(Math.random() * puzzle4Animals.length)];
+                const imgUrl = animalImageMap[randomAnimal];
+                
+                let pieces = [];
+                for (let i = 0; i < 4; i++) {
+                    // Buat Drop Zone
+                    const dropZone = document.createElement('div');
+                    dropZone.className = 'puzzle-drop-zone';
+                    dropZone.dataset.pos = i;
+                    puzzleGridTarget.appendChild(dropZone);
+                    
+                    // Buat Draggable Piece
+                    const piece = document.createElement('div');
+                    piece.className = 'puzzle-piece-drag';
+                    piece.draggable = true;
+                    piece.dataset.pos = i;
+                    piece.style.backgroundImage = `url(${imgUrl})`;
+                    piece.style.backgroundPosition = piecePositions[i];
+                    
+                    pieces.push(piece);
+                }
+                
+                pieces.sort(() => Math.random() - 0.5);
+                pieces.forEach(piece => {
+                    puzzlePiecesSource.appendChild(piece);
+                    addDragListenersToPiece(piece);
+                });
+                
+                document.querySelectorAll('.puzzle-drop-zone').forEach(zone => {
+                     addDropListenersToZone(zone);
+                });
+            }
+            
+            function addDragListenersToPiece(piece) {
+                piece.addEventListener('dragstart', (e) => {
+                    // playClickSound(); 
+                    draggedPuzzlePiece = piece;
+                    e.dataTransfer.setData('text/plain', piece.dataset.pos);
+                    setTimeout(() => piece.classList.add('dragging'), 0);
+                    if (puzzle4Feedback) puzzle4Feedback.textContent = '';
+                });
+                
+                piece.addEventListener('dragend', () => {
+                    if (draggedPuzzlePiece) { 
+                        draggedPuzzlePiece.classList.remove('dragging');
+                    }
+                    draggedPuzzlePiece = null;
+                });
+            }
+            
+            function addDropListenersToZone(zone) {
+                 zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (!zone.hasChildNodes()) { 
+                        zone.classList.add('drag-over');
+                    }
+                });
+                
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+                
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    
+                    if (zone.hasChildNodes() || !draggedPuzzlePiece) return; 
+                    
+                    const droppedPos = draggedPuzzlePiece.dataset.pos;
+                    const targetPos = zone.dataset.pos;
+                    
+                    if (droppedPos === targetPos) {
+                        // BENAR
+                        playClickSound(); 
+                        zone.appendChild(draggedPuzzlePiece);
+                        draggedPuzzlePiece.draggable = false;
+                        draggedPuzzlePiece.classList.add('placed');
+                        draggedPuzzlePiece.classList.remove('dragging');
+                        zone.style.border = 'none'; 
+                        
+                        correctPieces++;
+                        if (puzzle4Feedback) {
+                            puzzle4Feedback.textContent = "Benar!";
+                            puzzle4Feedback.className = "fs-3 font-title text-success";
+                        }
+                        
+                        if (correctPieces === 4) {
+                            if (puzzle4Feedback) puzzle4Feedback.textContent = "Hebat, Selesai!";
+                            if (resetPuzzle4Btn) resetPuzzle4Btn.classList.remove('d-none');
+                            playWinSound(); // Mainkan suara menang
+                        }
+                        
+                    } else {
+                        // SALAH
+                         playWrongSound(); 
+                         if (puzzle4Feedback) {
+                            puzzle4Feedback.textContent = "Bukan disitu!";
+                             puzzle4Feedback.className = "fs-3 font-title text-danger"; // Corrected class name
+                        }
+                    }
+                });
+            }
+            
+            if (resetPuzzle4Btn) {
+                resetPuzzle4Btn.addEventListener('click', () => {
+                    playClickSound(); 
+                    initGame4Puzzle();
+                });
+            }
+
+
+            // --- Inisialisasi Semua Kuis & Game saat DOM load ---
+            loadSoundQuestion(currentSoundQuestion);
+            initPuzzle();
+            createMemoryBoard();
+            initGame4Puzzle();
+            resetEggGame(); 
+
+        });
     </script>
 </body>
 </html>
